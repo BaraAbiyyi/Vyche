@@ -6,7 +6,7 @@ All notable changes to this project. Format based on Keep a Changelog, versionin
 
 ## [1.0.0] - 2026-11-15
 
-First complete release.
+First complete release. Published at https://github.com/BaraAbiyyi/Vyche, release commit `783211c5583ae51e70cb7f3a3d80297e682e22de` (tag `v1.0.0`). Every evaluation run should be tied to that hash or a later one.
 
 ### Added
 - `SKILL.md` with the full workflow: mode parsing, scope selection, project mapping, progressive reference loading, source-to-sink tracing, the five-part verification gate, and a pre-output quality gate.
