@@ -15,7 +15,7 @@ Vyche exists to catch that, before production, without a scanner to install or a
 ## Install (OpenCode)
 
 ```sh
-git clone https://github.com/BaraAbiyyi/Vyche.git
+git clone https://github.com/BaraAbiyyi/Vyche.git vyche
 cd your-project
 
 # skill: SKILL.md + references/
@@ -28,15 +28,17 @@ cp ../vyche/commands/vyche.md .opencode/commands/
 cp ../vyche/commands/vyche/*.md .opencode/commands/vyche/
 ```
 
+The trailing `vyche` in the clone command is load-bearing. Without it the repo lands in `Vyche/`, and every `../vyche/` path below breaks on a case-sensitive filesystem.
+
 Windows (PowerShell):
 
 ```powershell
-git clone https://github.com/BaraAbiyyi/Vyche.git
+git clone https://github.com/BaraAbiyyi/Vyche.git vyche
 Set-Location your-project
 New-Item -ItemType Directory -Force .opencode/skills/vyche, .opencode/commands/vyche | Out-Null
-Copy-Item ..\vyche\SKILL.md, ..\vyche\references -Destination .opencode/skills/vyche -Recurse
-Copy-Item ..\vyche\commands\vyche.md -Destination .opencode/commands/
-Copy-Item ..\vyche\commands\vyche\*.md -Destination .opencode/commands/vyche/
+Copy-Item ../vyche/SKILL.md, ../vyche/references -Destination .opencode/skills/vyche -Recurse
+Copy-Item ../vyche/commands/vyche.md -Destination .opencode/commands/
+Copy-Item ../vyche/commands/vyche/*.md -Destination .opencode/commands/vyche/
 ```
 
 OpenCode picks the files up without a restart. Paths and options differ between OpenCode versions; if `/vyche` does not appear, check the skills and commands docs for your version.
