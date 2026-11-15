@@ -1,0 +1,36 @@
+{
+  "fixture": "python-sqli",
+  "scenarios": ["T-1", "T-4"],
+  "stack": "Python / Flask / sqlite3",
+  "expected_main": [
+    {
+      "id": "F1",
+      "cwe": "CWE-89",
+      "severity": "High",
+      "acceptable_severity": ["High", "Critical"],
+      "confidence": "High",
+      "file": "app.py",
+      "anchor": "\"SELECT id, title FROM posts WHERE title LIKE '%\" + q + \"%'\"",
+      "title": "SQL injection in /search via string concatenation",
+      "fix_required": true,
+      "fix_expectation": "The value q is bound as a parameter, not concatenated. Exact wording is free. Escaping % and _ inside q is a behavior change and must be labelled as one if applied."
+    }
+  ],
+  "expected_review": [],
+  "acceptable_extra": [
+    {
+      "cwe": "CWE-862",
+      "file": "app.py",
+      "anchor": "def get_user(user_id):",
+      "why": "No authentication on /user/<id>. Legitimate if raised (Medium confidence, dependency on an upstream gateway stated). Does not count as a false positive and does not count toward recall."
+    }
+  ],
+  "decoys": [
+    {
+      "file": "app.py",
+      "why": "Parameterized query in /user/<id>. Must not be reported as SQL injection. Reporting missing authorization there is a separate finding and is covered by acceptable_extra.",
+      "anchor": "\"SELECT id, email FROM users WHERE id = ?\", (user_id,)"
+    }
+  ],
+  "notes": "Severity High because the app binds to 127.0.0.1 and the loopback bind is stated in the file. Critical is accepted if the run rates for internet exposure and says so."
+}

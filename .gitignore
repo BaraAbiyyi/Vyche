@@ -1,0 +1,24 @@
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Local environment
+.env
+.env.local
+opencode.json
+
+# Written by /vyche report when the user asks for a file
+vyche-report.md
+
+# Dependency and build artifacts, if anyone adds a stack later
+node_modules/
+dist/
+vendor/
+.venv/
+__pycache__/

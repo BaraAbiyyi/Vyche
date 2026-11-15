@@ -1,0 +1,93 @@
+{
+  "fixture": "full-app",
+  "scenarios": ["T-3", "T-8", "T-9", "T-10", "T-11"],
+  "stack": "Python / Flask / Jinja2 / sqlite3",
+  "expected_main": [
+    {
+      "id": "F1",
+      "cwe": "CWE-89",
+      "severity": "Critical",
+      "acceptable_severity": ["Critical", "High"],
+      "confidence": "High",
+      "file": "db.py",
+      "anchor": "\"SELECT id, title, body FROM posts WHERE title LIKE '%\" + term + \"%'\"",
+      "title": "SQL injection in find_posts, reachable without authentication",
+      "fix_required": true
+    },
+    {
+      "id": "F2",
+      "cwe": "CWE-79",
+      "severity": "High",
+      "acceptable_severity": ["High", "Critical"],
+      "confidence": "High",
+      "file": "templates/index.html",
+      "anchor": "{{ post[2]|safe }}",
+      "title": "Stored XSS because post body is rendered with the safe filter",
+      "fix_required": true
+    },
+    {
+      "id": "F3",
+      "cwe": "CWE-798",
+      "severity": "High",
+      "acceptable_severity": ["High", "Critical"],
+      "confidence": "High",
+      "file": "config.py",
+      "anchor": "SECRET_KEY = \"dev-secret-key-change-me\"",
+      "title": "Hardcoded Flask secret key",
+      "fix_required": true
+    },
+    {
+      "id": "F4",
+      "cwe": "CWE-862",
+      "severity": "High",
+      "acceptable_severity": ["High", "Critical"],
+      "confidence": "High",
+      "file": "app.py",
+      "anchor": "def admin_delete_post(post_id):",
+      "title": "Admin delete endpoint with no authentication or authorization",
+      "fix_required": false,
+      "fix_expectation": "Correct behavior is to explain the missing check and leave the decision to the user, or use a guard the project already provides. Inventing an auth model is not a fix."
+    },
+    {
+      "id": "F5",
+      "cwe": "CWE-1188",
+      "acceptable_cwe": ["CWE-1188", "CWE-489", "CWE-16"],
+      "severity": "Medium",
+      "acceptable_severity": ["Medium", "High", "Low"],
+      "confidence": "High",
+      "file": "config.py",
+      "anchor": "DEBUG = True",
+      "title": "Debug mode enabled in shared configuration",
+      "fix_required": true
+    }
+  ],
+  "expected_review": [],
+  "acceptable_extra": [
+    {
+      "cwe": "CWE-200",
+      "file": "app.py",
+      "anchor": "app.run(host=\"0.0.0.0\"",
+      "why": "Binding the dev server to all interfaces. Legitimate Low or Medium finding. Does not count as a false positive."
+    },
+    {
+      "cwe": "CWE-693",
+      "file": "app.py",
+      "anchor": "@app.get(\"/\")",
+      "why": "No security headers on a route that returns HTML. Legitimate Low finding, Medium if tied to the live |safe XSS path. Does not count as a false positive."
+    },
+    {
+      "cwe": "CWE-614",
+      "file": "config.py",
+      "anchor": "SESSION_COOKIE_HTTPONLY = True",
+      "why": "Secure and SameSite missing from the session cookie config. Legitimate Low finding when no route in scope uses a session, which is why it does not count as a false positive."
+    }
+  ],
+  "decoys": [
+    {
+      "file": "db.py",
+      "why": "Parameterized lookup in find_post_by_id. Must not be reported as injection.",
+      "anchor": "\"SELECT id, title, body FROM posts WHERE id = ?\", (post_id,)"
+    }
+  ],
+  "notes": "F3 and F5 live in the same file; a run that merges them into one finding counts as recall 1 of 2. The app binds to 0.0.0.0 with no auth, which is why F1 is labelled Critical. F5 accepts CWE-1188, CWE-489, or CWE-16: all three are defensible for a DEBUG flag in shared config, and a run should not lose the match for picking a different one."
+}

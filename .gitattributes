@@ -1,0 +1,7 @@
+# Markdown and shell are the product; keep them LF so cloning on Windows
+# does not rewrite every line and pollute future diffs.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary

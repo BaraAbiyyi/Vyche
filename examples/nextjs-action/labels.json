@@ -1,0 +1,56 @@
+{
+  "fixture": "nextjs-action",
+  "scenarios": ["T-12"],
+  "stack": "TypeScript / Next.js App Router / React / Prisma / zod",
+  "expected_main": [
+    {
+      "id": "F1",
+      "cwe": "CWE-862",
+      "acceptable_cwe": ["CWE-862", "CWE-639", "CWE-306"],
+      "severity": "High",
+      "acceptable_severity": ["High", "Critical"],
+      "confidence": "Medium",
+      "acceptable_confidence": ["Medium", "High"],
+      "file": "app/actions/invoice.ts",
+      "anchor": "export async function deleteInvoice(raw: unknown) {",
+      "title": "Server Action deletes any invoice with no session or ownership check",
+      "fix_required": true,
+      "fix_expectation": "A session check plus an ownership-scoped delete (deleteMany with userId, or an equivalent guard) inside the action itself."
+    },
+    {
+      "id": "F2",
+      "cwe": "CWE-79",
+      "severity": "High",
+      "acceptable_severity": ["High", "Medium"],
+      "confidence": "Medium",
+      "file": "app/invoices/page.tsx",
+      "anchor": "dangerouslySetInnerHTML={{ __html: latestComment }}",
+      "title": "HTML injected into the page from a helper whose sanitization is not visible in scope",
+      "fix_required": false,
+      "fix_expectation": "Medium confidence with the dependency on lib/comments.ts stated, or a Needs human review entry if the helper cannot be found."
+    }
+  ],
+  "expected_review": [],
+  "acceptable_extra": [
+    {
+      "cwe": "CWE-639",
+      "file": "app/actions/invoice.ts",
+      "anchor": "await db.invoice.delete({ where: { id } })",
+      "why": "The delete is scoped by id only, so even with a session added the ownership gap remains. Reporting this separately is legitimate and does not count as a false positive."
+    },
+    {
+      "cwe": "CWE-639",
+      "file": "app/invoices/page.tsx",
+      "anchor": "await db.invoice.findMany()",
+      "why": "The list query has no session or tenant filter, so it returns every row. Legitimate High finding and the reason F1 is practical. Does not count as a false positive."
+    }
+  ],
+  "decoys": [
+    {
+      "file": "app/actions/profile.ts",
+      "why": "Correct Server Action: session check, schema validation, scoped update. Must not be reported.",
+      "anchor": "export async function updateDisplayName(raw: unknown) {"
+    }
+  ],
+  "notes": "The highest-value finding is that a Server Action is a public endpoint. A run that only reports the JSX sink and misses F1 fails this scenario."
+}

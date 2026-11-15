@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Blog</title>
+  </head>
+  <body>
+    <h1>Posts</h1>
+    <ul>
+      {% for post in posts %}
+      <li>
+        <h2>{{ post[1] }}</h2>
+        <div>{{ post[2]|safe }}</div>
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

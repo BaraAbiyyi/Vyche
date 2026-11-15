@@ -1,0 +1,48 @@
+{
+  "fixture": "hardcoded-secret",
+  "scenarios": ["T-5"],
+  "stack": "JavaScript / Node / Express / jsonwebtoken",
+  "expected_main": [
+    {
+      "id": "F1",
+      "cwe": "CWE-798",
+      "severity": "High",
+      "acceptable_severity": ["High", "Medium", "Critical"],
+      "confidence": "High",
+      "file": "server.js",
+      "anchor": "const JWT_SECRET = 'vyche-demo-jwt-secret-2024'",
+      "title": "Hardcoded JWT signing secret",
+      "fix_required": true,
+      "fix_expectation": "The secret is read from the environment, startup fails when it is missing, and the report recommends rotating the committed value because it is already in version control history."
+    }
+  ],
+  "expected_review": [],
+  "acceptable_extra": [
+    {
+      "id": "F2",
+      "cwe": "CWE-306",
+      "file": "server.js",
+      "anchor": "app.post('/login', (req, res) => {",
+      "why": "/login signs a token from a username with no password check, so the service mints any identity. Legitimate High finding and arguably the more important of the two. Does not count as a false positive."
+    },
+    {
+      "cwe": "CWE-307",
+      "file": "server.js",
+      "anchor": "app.post('/login', (req, res) => {",
+      "why": "No rate limiting on /login. Legitimate Medium or Low finding. Does not count as a false positive, but must not replace F1."
+    }
+  ],
+  "decoys": [
+    {
+      "file": "server.js",
+      "why": "jwt.verify pins algorithms to HS256. Must not be reported as algorithm confusion.",
+      "anchor": "algorithms: ['HS256']"
+    },
+    {
+      "file": "server.js",
+      "why": "express.json() without an explicit limit. body-parser already caps bodies at 100kb, so this is hardening, not a finding. Reporting it costs precision.",
+      "anchor": "app.use(express.json())"
+    }
+  ],
+  "notes": "A run that reports only rate limiting and misses F1 scores recall 0 on the labelled finding. Severity Medium is accepted for F1 because the service binds to 127.0.0.1; per the severity precedence rule the deployment rating wins over the class default, provided the run names the line that would raise it. This fixture produces no HTML, so a missing security header finding here is a false positive."
+}

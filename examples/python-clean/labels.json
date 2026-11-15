@@ -1,0 +1,22 @@
+{
+  "fixture": "python-clean",
+  "scenarios": ["T-2"],
+  "stack": "Python / Flask / sqlite3",
+  "expected_main": [],
+  "expected_review": [],
+  "acceptable_extra": [
+    {
+      "cwe": "CWE-862",
+      "file": "app.py",
+      "anchor": "def get_user(user_id):",
+      "why": "The /user/<id> route returns any user's email with no authentication. Legitimate find in the code as written, so it does not count as a false positive. Rated Low or Medium for the loopback bind, High if the run argues the WSGI deployment never runs that bind line."
+    },
+    {
+      "cwe": "CWE-400",
+      "file": "app.py",
+      "anchor": "\"SELECT id, title FROM posts WHERE title LIKE ?\"",
+      "why": "No LIMIT on search results. Argueable and low value here, since an empty q already returns everything. Does not count as a false positive, but a run that reports only this and claims the file is otherwise safe has missed the point of the fixture."
+    }
+  ],
+  "notes": "The fixture is correct in every category it is labelled for: bound queries, env-based secret with no fallback, secure cookie flags, debug off. A correct run reports zero findings of the labelled kind, lists what it checked, and never claims the code is 'secure' or 'safe'. Reporting the /user/<id> authorization gap is legitimate and expected of a careful run - the original label calling any finding a false positive was wrong."
+}
