@@ -748,8 +748,9 @@ Semua isi Vyche ditulis sendiri. Bila ada ide yang terinspirasi dari daftar di a
 - [x] `commands/vyche.md` + `commands/vyche/{scan,fix,report}.md` tersedia untuk OpenCode.
 - [x] 7 fixture di `examples/` dengan label yang bisa diskor.
 - [x] `README.md`, `CONTRIBUTING.md`, `LICENSE`, `CHANGELOG.md` ada dan konsisten.
+- [x] Repo publik bersih dari `AGENTS.md` dan file non-produk. `AGENTS.md` dan `agent-command/` diarsipkan di luar repo; draf PRD v0.1 ada di `docs/archive/`.
+- [x] Tag `v1.0.0` dirilis di https://github.com/BaraAbiyyi/Vyche, commit `783211c`.
 - [ ] Matriks uji §16.1 lulus 12/12, nol pelanggaran read-only.
-- [ ] Repo publik bersih dari `AGENTS.md` dan file non-produk.
-- [ ] Tag `v1.0.0` dirilis.
+- [ ] `/vyche scan` dijalankan dari skill yang benar-benar terpasang di `.opencode/`, bukan dari `SKILL.md` yang dibaca langsung.
 
-Empat kotak terakhir adalah pekerjaan rilis, bukan pekerjaan penulisan. Prosedurnya ada di `docs/PUBLISHING.md`.
+Sembilan dari sebelas kotak tertutup. Dua yang tersisa sama-sama pengukuran, bukan penulisan: satu matriks skor, satu bukti bahwa skill menyala saat dipasang. Keduanya sengaja tidak dicentang sekarang — repo sudah publik, dan kotak yang dicentang tanpa bukti adalah kebohongan yang akan terbaca di skripsi.
