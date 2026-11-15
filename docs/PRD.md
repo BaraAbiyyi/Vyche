@@ -512,7 +512,7 @@ Kriteria lulus: 12/12 skenario sesuai harapan, dan nol pelanggaran mode read-onl
 
 "Belum diskor" bukan berarti hasilnya buruk. Artinya run itu terjadi sebelum label diperbaiki dan sebelum aturan terakhir ditambahkan, sehingga hasilnya tidak boleh dihitung sebagai skor. Run yang sudah ada membuktikan mekanisme berjalan; ia tidak menghasilkan angka.
 
-T-5, T-7, dan T-9 sampai T-11 belum pernah dijalankan sama sekali. Empat dari lima di antaranya hanya bisa diuji lewat command yang benar-benar terpasang, karena yang diukur adalah perilaku `/vyche` sebagai command OpenCode, bukan perilaku `SKILL.md` yang dibaca langsung.
+T-5, T-7, T-8, T-9, T-10, dan T-11 belum pernah dijalankan sama sekali — separuh matriks. Dua di antaranya, T-10 dan T-11, hanya bisa diuji lewat command yang benar-benar terpasang, karena yang diukur adalah perilaku `/vyche` sebagai command OpenCode, bukan perilaku `SKILL.md` yang dibaca langsung. Empat sisanya bisa diuji tanpa instalasi.
 
 ### 16.2 Prosedur pencatatan tiap run
 
