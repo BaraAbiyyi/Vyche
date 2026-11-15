@@ -60,11 +60,17 @@ Seven small projects with hand-labelled vulnerabilities. Each one exists so a te
 Run the same fixture under each evaluation condition, then score:
 
 ```
-matched   = labelled findings that appear in the report with a matching CWE and anchor
-precision = matched / findings_reported_excluding_acceptable_extra
-recall    = matched / labelled_total
-F1        = 2 * precision * recall / (precision + recall)
+matched    = labelled findings that appear in the report with a matching CWE and anchor
+precision  = matched / findings_reported_excluding_acceptable_extra
+recall     = matched / labelled_total
+F1         = 2 * precision * recall / (precision + recall)
 ```
+
+Two of those divisions have no answer when the fixture is small, so the edge cases are fixed here rather than left to whoever scores it:
+
+- **`labelled_total = 0`** (a run whose fixture has no labelled findings, like `python-clean` and T-2): recall and F1 are **not defined**. Leave them empty. Report `precision` and the false-positive count instead. Writing `recall = 1.0` there turns an honest fixture into an inflated average.
+- **`findings_reported_excluding_acceptable_extra = 0`**: precision is **not defined**. Leave it empty and report the false-positive count. Do not write `1.0`; a run that reported nothing has not earned a perfect precision, it has produced no data.
+- **Averages over a matrix**: compute precision, recall and F1 only over runs where the metric was defined, and state how many runs each average covers. A single number over a 12-row table with blanks in it is a lie of aggregation.
 
 Rules that keep scoring honest:
 

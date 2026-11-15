@@ -61,6 +61,14 @@ Skill version: 1.0.0
 
 **The scope block comes before the title, on purpose.** It is the first thing the reader sees, so a wrong scope can be corrected before reading a single finding. The "scope in the first line" rule wins over putting the title first.
 
+**Zero findings still has a shape.** Keep the findings table and state the emptiness, rather than deleting the section:
+
+| # | Severity | Confidence | CWE | Location | Title |
+|---|----------|------------|-----|----------|-------|
+| — | — | — | — | — | No findings |
+
+Then "Checked and found no issue" carries the coverage, "Needs human review" says `None` if it truly is none, and the summary says no issues were found within the reviewed scope. Deleting the table makes a clean run look like an unfinished one.
+
 ## Size limits
 
 A report that nobody finishes reading protects nobody. Three caps, and one of them is a diagnostic rather than a preference:
@@ -88,6 +96,18 @@ A fix run still reports what it found: the findings it patched, the findings it 
 
 If a patch changes behavior (escaping wildcards, rejecting input the code used to accept), say so in the `What changed` cell and name it as a behavior change. Closing zero findings is a valid outcome: say so, and say why.
 
+When zero findings were closed, the table keeps its row and states it, rather than disappearing:
+
+| Finding | File | What changed | Manual action still needed |
+|---------|------|--------------|----------------------------|
+| (none) | - | No files changed | Confirm whether the ownership check exists, and which field carries it |
+
+A missing table reads as an incomplete output. An empty table reads as a decision.
+
+`Not changed` is a cross-reference, not a demotion. A finding left alone keeps its place in the findings list at its own severity, and the most severe un-patchable finding still leads the report. If the answer to "why not fix this" is a decision only the user can make, that finding is not moved to the bottom to keep the changes table tidy.
+
+When a fix deletes a hardcoded secret, `git diff` shows the old value in full. That is git's output of the removed line, not something to copy into the report: keep the report's own quote masked and point the reviewer at `git diff`.
+
 ## Severity
 
 Judge by realistic impact and ease of exploitation in this project's context, not by vulnerability class alone.
@@ -105,7 +125,10 @@ Judge by realistic impact and ease of exploitation in this project's context, no
 Two cases the table alone does not settle:
 
 - **Injection on a public path, data behind it unseen**: High. Critical only when the code itself shows what is behind it - credentials, PII, payments, other tenants' rows. Say which one you saw; if you saw none, say that too.
+- **IDOR whose exposure is unconfirmed**: rate it for the internet - High on sensitive objects (payments, personal data, another tenant's rows), Medium on public catalog data - and put the missing routing/deployment file in `Depends on` as the line that would lower it. Unconfirmed exposure is an assumption to state, not a reason to leave severity blank.
 - **Missing security headers**: Low on an internal tool. Medium when the app serves user-generated content and there is a live XSS path a CSP would have blunted.
+
+A loopback bind is not a public path, so the class defaults above do not apply until a line in the code exposes it. Name that line.
 
 ## Two different lows
 

@@ -4,6 +4,22 @@ All notable changes to this project. Format based on Keep a Changelog, versionin
 
 ## [Unreleased]
 
+### Fixed
+- The explicit-mode commands (`scan`, `report`, `fix`) no longer re-derive the mode from the first word. They skip Step 0's mode detection and treat all of `$ARGUMENTS` as scope, so `/vyche/scan shop/app.py` can no longer resolve to `report` because `shop/app.py` is not the word "scan". Step references corrected to the output contract in Step 6.
+- Router `/vyche` now has a clean-tree branch: an empty `$ARGUMENTS` in a clean repository falls back to the source files in the working directory and says so, instead of prescribing "the files currently modified" when none are. It also restates that the empty case is read-only unless a report file is requested.
+- `fix` mode now separates the two axes: confidence is the gate for patching, severity is only the ordering. A Severity Low / Confidence High item is patchable; a Severity High / Confidence Low item is not. Previously "patch High and Medium confidence, most severe first" read as authorizing low-severity patches and invited over-patching.
+- A finding left unchanged now keeps its position in the findings list at its own severity. `Not changed` is a cross-reference, not a demotion, so the most severe un-patchable finding still leads the report.
+- "Confirm the hole is closed" is now defined as a code re-read, since the mode contract forbids running project code. The skill no longer implies a runtime test it is not allowed to perform.
+- A fix that deletes a hardcoded secret no longer collides with secret masking: `git diff` necessarily prints the removed value, so the report keeps its own quote masked, does not paste the diff, and points the reviewer at `git diff`.
+- Moving a secret to an environment variable now states what to do about `.env.example` and `.gitignore`, and forbids writing the real value to a new file.
+- IDOR with unconfirmed exposure now has a severity rule instead of two rules pulling apart: rate for the internet by data class, put the missing routing file in `Depends on`.
+- "Follow the pointer" now separates "absent because the project is an excerpt" from "absent because the control was deleted". Both stay Medium; the skill asks for the reading the evidence supports and what would settle it.
+- Listing a git-tracked `labels.json` is explicitly not reading it. Exclusion requires knowing the file exists; opening it is what is forbidden.
+- "Plus what they call" is bounded to direct imports, requires, and config that change the modified code, one hop, naming how many application files were actually opened.
+- A loopback bind is stated to be not a public path, so the class-based severity defaults do not apply until a line in the code exposes it.
+- Zero-finding reports now have a shape: keep the findings table and state the emptiness instead of deleting the section.
+- The read-only quality-gate item now asks for a `git status --porcelain` before/after check rather than an unchecked assertion.
+
 ## [1.0.0] - 2026-11-15
 
 First complete release. Published at https://github.com/BaraAbiyyi/Vyche, release commit `783211c5583ae51e70cb7f3a3d80297e682e22de` (tag `v1.0.0`). Every evaluation run should be tied to that hash or a later one.
