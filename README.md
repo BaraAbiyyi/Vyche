@@ -43,6 +43,8 @@ Copy-Item ../vyche/commands/vyche/*.md -Destination .opencode/commands/vyche/
 
 OpenCode picks the files up without a restart. Paths and options differ between OpenCode versions; if `/vyche` does not appear, check the skills and commands docs for your version.
 
+To install once for every project instead, copy the same files to `~/.config/opencode/skills/vyche/` and `~/.config/opencode/commands/` (on Windows, `%USERPROFILE%\.config\opencode\...`). The skill ID comes from the directory name, so keep it `vyche`. Project-local files override global ones.
+
 ## Use
 
 | Command | Changes files | Output |

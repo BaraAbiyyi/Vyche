@@ -4,7 +4,7 @@ description: Security review and remediation for source code, with extra attenti
 license: MIT
 compatibility: OpenCode (primary, tested). Other agents that read Markdown skills: best effort.
 metadata:
-  version: 1.0.1
+  version: 1.0.2
 ---
 
 # Vyche

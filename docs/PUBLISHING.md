@@ -1,4 +1,4 @@
-# Publishing checklist
+﻿# Publishing checklist
 
 Run this before making the repository public. The skill is harmless to ship; the working directory it was built in is not.
 
@@ -45,7 +45,7 @@ Already filled for the release (`Bara Abiyyi`, `BaraAbiyyi`). If you fork this a
 - `LICENSE`: the copyright holder.
 - `README.md`: the clone URL, in both the shell and PowerShell blocks.
 - `docs/PRD.md`: the `Pemilik` field in the document header.
-- `docs/PUBLISHING.md`: the remote URL in §6.
+- `docs/PUBLISHING.md`: the remote URL in Â§6.
 
 ## 5. Verify the skill actually loads
 
@@ -64,12 +64,12 @@ A run that passes all seven is a release candidate.
 ```powershell
 git init
 git add .
-git commit -m "vyche 1.0.1"
+git commit -m "vyche 1.0.2"
 git branch -M main
 git remote add origin https://github.com/BaraAbiyyi/Vyche.git
 git push -u origin main
-git tag -a v1.0.1 -m "vyche 1.0.1"
-git push origin v1.0.1
+git tag -a v1.0.2 -m "vyche 1.0.2"
+git push origin v1.0.2
 ```
 
 Then on GitHub:
@@ -82,4 +82,4 @@ Then on GitHub:
 ## 7. After publishing
 
 - Record the release commit hash in the evaluation log, so every test run can be traced to an exact version of the skill.
-- Any change to `SKILL.md` or `references/` after a release requires a version bump before further evaluation runs, or the comparison is invalid. Current release: `v1.0.1`.
+- Any change to `SKILL.md` or `references/` after a release requires a version bump before further evaluation runs, or the comparison is invalid. Current release: `v1.0.2`.

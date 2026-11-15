@@ -2,7 +2,7 @@
 description: Security scan, report, or fix with the Vyche skill (scan/fix/report)
 ---
 
-Use the `vyche` skill and follow its process. Read `.opencode/skills/vyche/SKILL.md` first if the skill is not already loaded.
+Use the `vyche` skill (ID `vyche`). Load it if it is not already loaded. Follow its process.
 
 User request: $ARGUMENTS
 

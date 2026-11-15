@@ -25,7 +25,7 @@ The quote goes inside the `Reason` cell, between backticks. Low-confidence items
 Scope: <files/folders reviewed, and what was skipped>
 Mode: report | fix
 Stack detected: <languages, frameworks, database, auth>
-Skill version: 1.0.1
+Skill version: 1.0.2
 
 # Vyche Security Report
 

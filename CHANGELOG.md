@@ -2,6 +2,11 @@
 
 All notable changes to this project. Format based on Keep a Changelog, versioning follows SemVer.
 
+## [1.0.2] - 2026-11-15
+
+### Fixed
+- The router command no longer hardcodes `.opencode/skills/vyche/SKILL.md`. It loads the skill by its OpenCode ID (`vyche`), so a global install under `~/.config/opencode/skills/` works instead of pointing at a path that does not exist there.
+
 ## [1.0.1] - 2026-11-15
 
 Patch release from the first full test-matrix pass. `SKILL.md` changed, so per `docs/PUBLISHING.md` this is a version bump, not a silent edit: **evaluation runs from here on should be tied to this release, not `v1.0.0`.** No behaviour was removed; every change corrects a rule that two test runs showed could be read the wrong way.
