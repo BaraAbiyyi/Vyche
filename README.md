@@ -49,7 +49,7 @@ OpenCode picks the files up without a restart. Paths and options differ between 
 | --- | --- | --- |
 | `/vyche scan <scope>` | No | Table of findings: severity, CWE, location, one-line reason |
 | `/vyche report <scope>` | No (unless you ask for a file) | Full report: evidence, why it matters, recommended fix, limits |
-| `/vyche fix <scope>` | Yes, minimal patches, no commit | Changes table, what still needs you, test command |
+| `/vyche fix <scope>` | Yes, minimal patches, no commit | Full report plus a changes table, what still needs you, test command |
 
 `/vyche/scan`, `/vyche/report`, and `/vyche/fix` do the same thing with the mode as part of the command.
 
@@ -61,7 +61,7 @@ OpenCode picks the files up without a restart. Paths and options differ between 
 /vyche is this login flow safe?
 ```
 
-Scope is free text. If you do not name one, Vyche starts from the files modified in your working tree and tells you that is what it picked.
+Scope is free text. If you do not name one, Vyche starts from the files modified in your working tree; if the tree is clean, it uses the source files in the working directory. Either way it tells you which rule it picked.
 
 Default mode is `report`: read-only, safest, most informative.
 
