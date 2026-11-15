@@ -518,6 +518,19 @@ Dua belas skenario sekarang punya hasil. Delapan di antaranya (T-1, T-2, T-3, T-
 
 Catat: versi skill, versi OpenCode, model, pengaturan yang dapat diatur, tanggal-waktu, fixture, perintah yang dipakai, jumlah temuan per severity, dan pelanggaran mode. Log disimpan sebagai CSV/JSON agar bisa diolah.
 
+### 16.3 Skor yang sudah terukur
+
+Hanya run yang keluaran verbatim-nya tersimpan yang boleh diberi angka. Sampai sekarang itu dua: T-5 dan T-7, keduanya dijalankan dengan skill terpasang di `.opencode/` dan label yang sudah dikoreksi.
+
+| Run | Terdeteksi | Precision | Recall | F1 | Severity | Confidence | Catatan |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| T-5 `hardcoded-secret` | 1/1 | 1.00 | 1.00 | 1.00 | agree (Medium) | agree (High) | CWE-306 di `/login` dilaporkan sebagai extra yang sah; nol decoy; secret disamarkan, rotasi disarankan, patch gagal-start |
+| T-7 `ambiguous-auth` | 1/1 | 1.00 | 1.00 | 1.00 | agree (High) | agree (Medium) | Nol patch; pointer `billing/middleware.py` ditelusuri, dinyatakan tidak ada; empat keputusan diserahkan ke pengguna |
+
+T-1, T-2, T-3, T-4, T-6, dan T-12 sudah pernah dijalankan tetapi keluarannya tidak tersimpan utuh, jadi tidak diberi angka - mencocokkan dari ingatan bukan pengukuran. T-8 sampai T-11 dinilai dengan kriteria lulus/gagal, bukan label, karena repo ujinya tidak punya `labels.json`: keempatnya lulus (T-10/T-11 pada simulasi teks command, lihat §16.1).
+
+Dua run bukan sampel. Angka 1.00 di atas berarti "pada dua kasus ini, dengan label ini, hasilnya tepat", bukan "Vyche presisi sempurna". Rata-rata baru boleh dihitung setelah setiap baris punya keluaran tersimpan.
+
 ---
 
 ## 17. Rencana evaluasi penelitian
