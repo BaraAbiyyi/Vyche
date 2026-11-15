@@ -2,7 +2,9 @@
 
 All notable changes to this project. Format based on Keep a Changelog, versioning follows SemVer.
 
-## [Unreleased]
+## [1.0.1] - 2026-11-15
+
+Patch release from the first full test-matrix pass. `SKILL.md` changed, so per `docs/PUBLISHING.md` this is a version bump, not a silent edit: **evaluation runs from here on should be tied to this release, not `v1.0.0`.** No behaviour was removed; every change corrects a rule that two test runs showed could be read the wrong way.
 
 ### Fixed
 - The explicit-mode commands (`scan`, `report`, `fix`) no longer re-derive the mode from the first word. They skip Step 0's mode detection and treat all of `$ARGUMENTS` as scope, so `/vyche/scan shop/app.py` can no longer resolve to `report` because `shop/app.py` is not the word "scan". Step references corrected to the output contract in Step 6.

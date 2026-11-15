@@ -40,7 +40,7 @@ Fixtures use obviously fake values (`vyche-demo-jwt-secret-2024`, `dev-secret-ke
 
 ## 4. Fill in the placeholders
 
-Already filled for the 1.0.0 release (`Bara Abiyyi`, `BaraAbiyyi`). If you fork this and publish under another name, update these:
+Already filled for the release (`Bara Abiyyi`, `BaraAbiyyi`). If you fork this and publish under another name, update these:
 
 - `LICENSE`: the copyright holder.
 - `README.md`: the clone URL, in both the shell and PowerShell blocks.
@@ -64,12 +64,12 @@ A run that passes all seven is a release candidate.
 ```powershell
 git init
 git add .
-git commit -m "vyche 1.0.0"
+git commit -m "vyche 1.0.1"
 git branch -M main
 git remote add origin https://github.com/BaraAbiyyi/Vyche.git
 git push -u origin main
-git tag -a v1.0.0 -m "vyche 1.0.0"
-git push origin v1.0.0
+git tag -a v1.0.1 -m "vyche 1.0.1"
+git push origin v1.0.1
 ```
 
 Then on GitHub:
@@ -82,4 +82,4 @@ Then on GitHub:
 ## 7. After publishing
 
 - Record the release commit hash in the evaluation log, so every test run can be traced to an exact version of the skill.
-- Any change to `SKILL.md` or `references/` after v1.0.0 requires a version bump before further evaluation runs, or the comparison is invalid.
+- Any change to `SKILL.md` or `references/` after a release requires a version bump before further evaluation runs, or the comparison is invalid. Current release: `v1.0.1`.

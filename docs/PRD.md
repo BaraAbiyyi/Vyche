@@ -520,7 +520,7 @@ Catat: versi skill, versi OpenCode, model, pengaturan yang dapat diatur, tanggal
 
 ### 16.3 Skor yang sudah terukur
 
-Hanya run yang keluaran verbatim-nya tersimpan yang boleh diberi angka. Sampai sekarang itu dua: T-5 dan T-7, keduanya dijalankan dengan skill terpasang di `.opencode/` dan label yang sudah dikoreksi.
+Hanya run yang keluaran verbatim-nya tersimpan yang boleh diberi angka. Sampai sekarang itu dua: T-5 dan T-7, keduanya dijalankan dengan skill terpasang di `.opencode/` dan label yang sudah dikoreksi. Keduanya berjalan pada teks `SKILL.md` 1.0.0; cacat yang mereka buka sudah diperbaiki di 1.0.1, dan skor di bawah mengukur perilaku yang tidak berubah oleh perbaikan itu.
 
 | Run | Terdeteksi | Precision | Recall | F1 | Severity | Confidence | Catatan |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -766,7 +766,7 @@ Semua isi Vyche ditulis sendiri. Bila ada ide yang terinspirasi dari daftar di a
 - [x] 7 fixture di `examples/` dengan label yang bisa diskor.
 - [x] `README.md`, `CONTRIBUTING.md`, `LICENSE`, `CHANGELOG.md` ada dan konsisten.
 - [x] Repo publik bersih dari `AGENTS.md` dan file non-produk. `AGENTS.md` dan `agent-command/` diarsipkan di luar repo; draf PRD v0.1 ada di `docs/archive/`.
-- [x] Tag `v1.0.0` dirilis di https://github.com/BaraAbiyyi/Vyche, commit `783211c`.
+- [x] Tag `v1.0.0` dirilis di https://github.com/BaraAbiyyi/Vyche, commit `783211c`. Tag `v1.0.1` menyusul setelah putaran uji matriks pertama, karena `SKILL.md` berubah sesudah `v1.0.0`.
 - [ ] Matriks uji §16.1 lulus 12/12, nol pelanggaran read-only.
 - [ ] `/vyche scan` dijalankan dari skill yang benar-benar terpasang di `.opencode/`, bukan dari `SKILL.md` yang dibaca langsung.
 
