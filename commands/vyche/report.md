@@ -2,7 +2,7 @@
 description: Vyche report - full security report with evidence and fixes, saved as vyche-report.md
 ---
 
-Use the `vyche` skill in **report** mode. The mode is already decided by this command: **skip Step 0's mode detection entirely, and treat everything in `$ARGUMENTS` as scope, even when it is a bare file path.** Then follow Steps 1-5 and the report output contract in Step 6.
+Use the `vyche` skill in **report** mode. The mode is already decided by this command: **skip Step 0's mode detection entirely, and treat the `Scope:` line below as the scope, even when it is a bare file path.** Then follow Steps 1-5 and the report output contract in Step 6.
 
 Scope: $ARGUMENTS
 

@@ -4,7 +4,7 @@ description: Security review and remediation for source code, with extra attenti
 license: MIT
 compatibility: OpenCode (primary, tested). Other agents that read Markdown skills: best effort.
 metadata:
-  version: 1.0.3
+  version: 1.0.4
 ---
 
 # Vyche
@@ -43,7 +43,8 @@ The text after `/vyche` (or the user's sentence) tells you the mode and the scop
 Extra rules:
 
 - `/vyche scan lalu perbaiki` = run `scan`, then offer `fix`. Do not silently write files.
-- `/vyche fix temuan 2` = fix mode limited to that finding.
+- Two read-only modes named at once (`scan and report`, `scan lalu report`) = run `report`, because it contains the scan table, and say which mode you ran on the first line. The more complete read-only mode wins.
+- `/vyche fix temuan 2` = fix mode limited to that finding. `fix` is never a tie-breaker: it writes, so it runs only when the user asked for a fix.
 - If the user asks to attack, probe, or exploit a running system instead of reviewing code, decline that part, and offer a code review.
 
 ## Step 1 - Decide the scope
@@ -255,6 +256,8 @@ Respect the template's size limits. A reader who abandons the report at finding 
 
 Write the report to `vyche-report.md` in the project root, and say where it went. Overwrite the previous file instead of creating `vyche-report-2.md`. That file is the only thing `report` mode writes. If the user explicitly says to keep it in the conversation only, skip the file - the guarantee is that nothing else in the project changes, not that a file can never be written.
 
+`Skill version:` in the header is the `version:` field of the SKILL.md loaded for this run. A template that was read earlier in the session is not evidence of which version is installed now: if the number you are about to write does not match the `version:` in the SKILL.md you are following, that template is stale - re-read `references/report-template.md` and rewrite the header before saving.
+
 ### fix
 
 Only after Steps 1-5 are complete. A fix run still reports: the findings it patched, the findings it deliberately left, and the changes. It is not only a changes table.
@@ -291,6 +294,7 @@ Next: review with `git diff`; run `pytest -q`; rotate the secret that was commit
 - [ ] Severity reflects this project's context and the deployment the code shows, not the vulnerability class alone.
 - [ ] `scan` wrote nothing and `report` wrote only `vyche-report.md`. For `scan`, `git status --porcelain` is unchanged from before the run; if you did not check, do not claim it.
 - [ ] `report` includes the limits section, and respects the size limits.
+- [ ] `Skill version` in the report equals the `version:` field of the SKILL.md loaded for this run. If it does not, the run used a stale template: re-read the template, fix the header, and say so.
 - [ ] Output language matches the user's language.
 - [ ] Nothing in the report is invented to look thorough.
 

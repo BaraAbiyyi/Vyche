@@ -2,6 +2,20 @@
 
 All notable changes to this project. Format based on Keep a Changelog, versioning follows SemVer.
 
+## [1.0.4] - 2026-11-16
+
+Patch release from the first run in a real project (`siap-sistem-dlh`, Laravel 13), not a fixture. The report itself was correct and `report` wrote only `vyche-report.md`; the defects were in how the run was driven.
+
+### Fixed
+- **Stale `Skill version:` in a report header.** The run loaded `SKILL.md` 1.0.3 but wrote `Skill version: 1.0.2`, because the report template had been read earlier in the session and was reused from context after the skill was updated on disk. The rule is now explicit: the version comes from the loaded `SKILL.md`, and if the number about to be written does not match it, the template in context is stale - re-read `references/report-template.md` and rewrite the header. Added to the report step, the template, and the quality gate.
+- **`$ARGUMENTS` inside explanatory prose in the router.** The command host substitutes the placeholder everywhere in the file, so the prompt actually read "**`scan and report` empty** -> `report` mode". The empty-scope and no-mode branches now describe the request instead of embedding the placeholder. The explicit `scan`/`report`/`fix` commands were reworded the same way; `$ARGUMENTS` now appears only where the value is wanted.
+- **No rule for two mode words in one request.** The run was `/vyche scan and report`; "first word decides" would choose `scan`, but `report` is the superset and is what the run produced - by judgment, not by rule. Now stated: when two read-only modes are named, `report` wins and the run says which mode it used. `fix` is never a tie-breaker, because it writes.
+- **Needs human review repeated a finding.** The template already forbade restating a finding, but the real report listed a review item that repeated the fix advice of finding 2. The section now asks for the open question only, one line, without the finding's title or fix.
+
+### Changed
+- `docs/PRD.md` §16.4 records the real-project run and the three defects it exposed; T-9 gains the run's `report` evidence instead of "needs re-run".
+- Publishing checklist: the `report` step now also checks the `Skill version:` line against the installed `SKILL.md`.
+
 ## [1.0.3] - 2026-11-15
 
 ### Changed

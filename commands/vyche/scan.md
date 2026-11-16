@@ -2,7 +2,7 @@
 description: Vyche scan - fast read-only security scan with a findings table
 ---
 
-Use the `vyche` skill in **scan** mode. The mode is already decided by this command: **skip Step 0's mode detection entirely, and treat everything in `$ARGUMENTS` as scope, even when it is a bare file path.** Then follow Steps 1-5 and the scan output contract in Step 6.
+Use the `vyche` skill in **scan** mode. The mode is already decided by this command: **skip Step 0's mode detection entirely, and treat the `Scope:` line below as the scope, even when it is a bare file path.** Then follow Steps 1-5 and the scan output contract in Step 6.
 
 Scope: $ARGUMENTS
 

@@ -2,7 +2,7 @@
 description: Vyche fix - analyze, then apply minimal security patches without committing
 ---
 
-Use the `vyche` skill in **fix** mode. The mode is already decided by this command: **skip Step 0's mode detection entirely, and treat everything in `$ARGUMENTS` as scope, even when it is a bare file path.** Analyze first (Steps 1-5), then patch (Step 6, fix).
+Use the `vyche` skill in **fix** mode. The mode is already decided by this command: **skip Step 0's mode detection entirely, and treat the `Scope:` line below as the scope, even when it is a bare file path.** Analyze first (Steps 1-5), then patch (Step 6, fix).
 
 Scope: $ARGUMENTS
 

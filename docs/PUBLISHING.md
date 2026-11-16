@@ -53,9 +53,9 @@ Already filled for the release (`Bara Abiyyi`, `BaraAbiyyi`). If you fork this a
 2. Run `/vyche scan examples/python-sqli` from the Vyche repo (or copy the fixture into the test project).
 3. Confirm the output is a findings table with `CWE-89`, the correct file, and a quoted snippet.
 4. Run `/vyche scan examples/python-clean` and confirm zero findings, with a list of what was checked and no claim that the code is secure.
-5. Run `/vyche report examples/full-app` and confirm all six template sections are present.
+5. Run `/vyche report examples/full-app` and confirm all six template sections are present, that it wrote exactly `vyche-report.md` and nothing else, and that `Skill version:` equals the `version:` in the installed `SKILL.md` - not an older value from a template read earlier in the session.
 6. Run `/vyche fix examples/python-sqli`, then `git diff` and confirm the change is minimal and uncommitted.
-7. Run `/vyche report examples/full-app` and confirm it writes exactly `vyche-report.md` and nothing else. Then run `/vyche scan examples/full-app` and confirm `git status` is unchanged.
+7. Run `/vyche scan examples/full-app` and confirm `git status` shows no change from before the scan.
 
 A run that passes all seven is a release candidate.
 
@@ -64,12 +64,12 @@ A run that passes all seven is a release candidate.
 ```powershell
 git init
 git add .
-git commit -m "vyche 1.0.3"
+git commit -m "vyche 1.0.4"
 git branch -M main
 git remote add origin https://github.com/BaraAbiyyi/Vyche.git
 git push -u origin main
-git tag -a v1.0.3 -m "vyche 1.0.3"
-git push origin v1.0.3
+git tag -a v1.0.4 -m "vyche 1.0.4"
+git push origin v1.0.4
 ```
 
 Then on GitHub:
@@ -82,4 +82,4 @@ Then on GitHub:
 ## 7. After publishing
 
 - Record the release commit hash in the evaluation log, so every test run can be traced to an exact version of the skill.
-- Any change to `SKILL.md` or `references/` after a release requires a version bump before further evaluation runs, or the comparison is invalid. Current release: `v1.0.3`.
+- Any change to `SKILL.md` or `references/` after a release requires a version bump before further evaluation runs, or the comparison is invalid. Current release: `v1.0.4`.

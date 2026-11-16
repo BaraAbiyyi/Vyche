@@ -41,7 +41,7 @@ Copy-Item ../vyche/commands/vyche.md -Destination .opencode/commands/
 Copy-Item ../vyche/commands/vyche/*.md -Destination .opencode/commands/vyche/
 ```
 
-OpenCode picks the files up without a restart. Paths and options differ between OpenCode versions; if `/vyche` does not appear, check the skills and commands docs for your version.
+OpenCode picks the files up without a restart. Anything already read into the conversation stays as it was read, though: if you update the skill mid-session, a report can still be written from the older template you read earlier. Start a fresh session after an update if you want the report's `Skill version:` line to prove which version ran. Paths and options differ between OpenCode versions; if `/vyche` does not appear, check the skills and commands docs for your version.
 
 To install once for every project instead, copy the same files to `~/.config/opencode/skills/vyche/` and `~/.config/opencode/commands/` (on Windows, `%USERPROFILE%\.config\opencode\...`). The skill ID comes from the directory name, so keep it `vyche`. Project-local files override global ones.
 
@@ -66,6 +66,8 @@ To install once for every project instead, copy the same files to `~/.config/ope
 Scope is free text. If you do not name one, Vyche starts from the files modified in your working tree; if the tree is clean, it uses the source files in the working directory. Either way it tells you which rule it picked.
 
 Default mode is `report`: it reads the code and writes only `vyche-report.md`, nothing else. `scan` is the zero-write option.
+
+`vyche-report.md` is a generated artifact: each run overwrites it. Add it to `.gitignore` if you do not want it committed; Vyche never edits `.gitignore` for you.
 
 ## How it works
 

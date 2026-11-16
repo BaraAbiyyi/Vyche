@@ -25,7 +25,7 @@ The quote goes inside the `Reason` cell, between backticks. Low-confidence items
 Scope: <files/folders reviewed, and what was skipped>
 Mode: report | fix
 Stack detected: <languages, frameworks, database, auth>
-Skill version: 1.0.3
+Skill version: 1.0.4
 
 # Vyche Security Report
 
@@ -50,7 +50,7 @@ Skill version: 1.0.3
 (repeat per finding, most severe first)
 
 ## Needs human review
-<optional, max 5 items: suspicious items that could not be verified, and exactly what is missing to decide. Past five, group by file - one line per file>
+<optional, max 5 items: suspicious items that could not be verified, and exactly what is missing to decide. Past five, group by file - one line per file. One line per item, the open question only: do not restate a finding's title or repeat the fix you already gave for it.>
 
 ## Checked and found no issue
 <optional, one or two lines: categories examined without findings, so the user knows the coverage>
@@ -60,6 +60,8 @@ Skill version: 1.0.3
 ```
 
 **The scope block comes before the title, on purpose.** It is the first thing the reader sees, so a wrong scope can be corrected before reading a single finding. The "scope in the first line" rule wins over putting the title first.
+
+**`Skill version:` is not decoration.** It is how a run is tied to a release, and it is the only part of the header an agent can get wrong without noticing. Copy the `version:` field from the SKILL.md loaded for this run. If you read this template at an earlier point in the session and the skill files were updated since, the copy in your context carries the old number - re-read the template before writing the header.
 
 **`report` writes this to `vyche-report.md` in the project root.** Overwrite the previous file rather than adding a suffix. The file is the mode's only write; source stays untouched. State the path at the end of the chat answer. If the user asked to keep it in the conversation only, skip the file.
 
