@@ -12,6 +12,8 @@ desktop.ini
 .env
 .env.local
 opencode.json
+docs/
+examples/
 
 # Written by /vyche report when the user asks for a file
 vyche-report.md
