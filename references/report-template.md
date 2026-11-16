@@ -25,7 +25,7 @@ The quote goes inside the `Reason` cell, between backticks. Low-confidence items
 Scope: <files/folders reviewed, and what was skipped>
 Mode: report | fix
 Stack detected: <languages, frameworks, database, auth>
-Skill version: 1.0.2
+Skill version: 1.0.3
 
 # Vyche Security Report
 
@@ -60,6 +60,8 @@ Skill version: 1.0.2
 ```
 
 **The scope block comes before the title, on purpose.** It is the first thing the reader sees, so a wrong scope can be corrected before reading a single finding. The "scope in the first line" rule wins over putting the title first.
+
+**`report` writes this to `vyche-report.md` in the project root.** Overwrite the previous file rather than adding a suffix. The file is the mode's only write; source stays untouched. State the path at the end of the chat answer. If the user asked to keep it in the conversation only, skip the file.
 
 **Zero findings still has a shape.** Keep the findings table and state the emptiness, rather than deleting the section:
 

@@ -2,6 +2,18 @@
 
 All notable changes to this project. Format based on Keep a Changelog, versioning follows SemVer.
 
+## [1.0.3] - 2026-11-15
+
+### Changed
+- **`report` now writes `vyche-report.md` by default.** Previously the file existed only when the user asked for it, so a `/vyche report` run left nothing behind. The report is the deliverable, so it is now always written: exactly one file, `vyche-report.md` in the project root, overwriting the previous one rather than adding a suffix. Passing `report` keeps the full report in the conversation too, and the agent states the path.
+- `scan` remains zero-write. The mode contract now reads `scan`: no writes; `report`: exactly one file; `fix`: patches, no commit. The read-only promise is narrowed to what it actually means: source is never touched, not that no file can be written.
+- If the user explicitly asks to keep the report in the conversation only, the file is skipped - the guarantee is no other change to the project.
+- Updated mode contract, quality gate, router, explicit `report` command, report template, README, PRD mode table, goals, NFR-7, FR-17, test-matrix T-9, examples map, and the publishing check to match.
+
+### Fixed
+- Removed mojibake in the docs that had been rendering as garbage in the PRD, publishing guide, and archived draft.
+- PRD quality-gate line said "no Low findings in the main list", contradicting the rule that Severity Low may appear and only confidence Low is excluded.
+
 ## [1.0.2] - 2026-11-15
 
 ### Fixed

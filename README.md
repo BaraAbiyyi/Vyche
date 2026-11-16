@@ -50,7 +50,7 @@ To install once for every project instead, copy the same files to `~/.config/ope
 | Command | Changes files | Output |
 | --- | --- | --- |
 | `/vyche scan <scope>` | No | Table of findings: severity, CWE, location, one-line reason |
-| `/vyche report <scope>` | No (unless you ask for a file) | Full report: evidence, why it matters, recommended fix, limits |
+| `/vyche report <scope>` | Creates `vyche-report.md` in the project root, nothing else | Full report: evidence, why it matters, recommended fix, limits |
 | `/vyche fix <scope>` | Yes, minimal patches, no commit | Full report plus a changes table, what still needs you, test command |
 
 `/vyche/scan`, `/vyche/report`, and `/vyche/fix` do the same thing with the mode as part of the command.
@@ -65,7 +65,7 @@ To install once for every project instead, copy the same files to `~/.config/ope
 
 Scope is free text. If you do not name one, Vyche starts from the files modified in your working tree; if the tree is clean, it uses the source files in the working directory. Either way it tells you which rule it picked.
 
-Default mode is `report`: read-only, safest, most informative.
+Default mode is `report`: it reads the code and writes only `vyche-report.md`, nothing else. `scan` is the zero-write option.
 
 ## How it works
 

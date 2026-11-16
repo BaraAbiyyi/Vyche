@@ -1,5 +1,5 @@
 ---
-description: Vyche report - full read-only security report with evidence and fixes
+description: Vyche report - full security report with evidence and fixes, saved as vyche-report.md
 ---
 
 Use the `vyche` skill in **report** mode. The mode is already decided by this command: **skip Step 0's mode detection entirely, and treat everything in `$ARGUMENTS` as scope, even when it is a bare file path.** Then follow Steps 1-5 and the report output contract in Step 6.
@@ -7,7 +7,9 @@ Use the `vyche` skill in **report** mode. The mode is already decided by this co
 Scope: $ARGUMENTS
 
 Rules for this run:
-- Read-only. Do not modify, create, or delete any project file, except writing the report file if explicitly asked.
+- Write the report to `vyche-report.md` in the project root and say where it went. That is the only file this run writes; do not modify, create, or delete any source or config file.
+- Overwrite an existing `vyche-report.md`; do not create `vyche-report-2.md` or a timestamped variant.
+- If the user explicitly asks to keep the report in the conversation only, skip the file and say so.
 - State the scope in the first line of your answer.
 - Use `references/report-template.md` exactly, including the "Needs human review", "Checked and found no issue", and "Not covered / limits" sections.
 - Every finding needs file, line, and a quoted snippet.

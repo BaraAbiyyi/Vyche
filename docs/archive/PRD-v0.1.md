@@ -1,8 +1,8 @@
-﻿> **Archived.** This is the v0.1 draft, superseded by `docs/PRD.md` (v1.1). Kept for history; do not treat it as the current specification.
+> **Archived.** This is the v0.1 draft, superseded by `docs/PRD.md` (v1.1). Kept for history; do not treat it as the current specification.
 
 # PRD Vyche: Agent Skill untuk Analisis, Perbaikan, dan Pelaporan Keamanan Kode
 
-Versi 0.1 (draf) Â· 15 November 2026 Â· Penyusun: \[nama kamu\] Â· Status: untuk didiskusikan dengan dosen pembimbing
+Versi 0.1 (draf) · 15 November 2026 · Penyusun: \[nama kamu\] · Status: untuk didiskusikan dengan dosen pembimbing
 
 ## 1. Ringkasan
 

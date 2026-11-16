@@ -1,4 +1,4 @@
-﻿# PRD â€” Vyche: Agent Skill untuk Analisis, Perbaikan, dan Pelaporan Keamanan Kode
+# PRD — Vyche: Agent Skill untuk Analisis, Perbaikan, dan Pelaporan Keamanan Kode
 
 | Field | Isi |
 | --- | --- |
@@ -10,7 +10,7 @@
 | Pemilik | Bara Abiyyi |
 | Media uji resmi | OpenCode |
 | Distribusi | Open source di GitHub |
-| Lisensi | MIT (usulan, lihat Â§20) |
+| Lisensi | MIT (usulan, lihat §20) |
 | Dokumen terkait | `docs/archive/PRD-v0.1.md` (draf v0.1, arsip), `SKILL.md`, `references/*` |
 
 ---
@@ -52,11 +52,11 @@ Tiga perintah:
 
 | Perintah | Sifat | Keluaran |
 | --- | --- | --- |
-| `/vyche scan` | read-only | Ringkasan temuan di chat: lokasi, CWE, severity, satu kalimat alasan |
-| `/vyche report` | read-only | Laporan terstruktur: bukti, dampak, rekomendasi perbaikan, batasan |
+| `/vyche scan` | nol tulis | Ringkasan temuan di chat: lokasi, CWE, severity, satu kalimat alasan |
+| `/vyche report` | menulis satu file | Laporan terstruktur: bukti, dampak, rekomendasi perbaikan, batasan; disimpan ke `vyche-report.md` |
 | `/vyche fix` | menulis file | Patch minimal untuk temuan terverifikasi, tanpa commit |
 
-Nilai pembeda: setiap temuan wajib berbukti (file, baris, kutipan), temuan berkeyakinan rendah disingkirkan ke bagian "Perlu ditinjau manusia", dan mode read-only dijamin tidak menyentuh file pengguna.
+Nilai pembeda: setiap temuan wajib berbukti (file, baris, kutipan), temuan berkeyakinan rendah disingkirkan ke bagian "Perlu ditinjau manusia", dan `scan` dijamin tidak menyentuh file pengguna. `report` hanya menulis satu file, `vyche-report.md`; tidak pernah menyentuh source.
 
 Dokumen ini sekaligus menjadi dasar skripsi: Vyche dirancang, lalu dievaluasi seberapa besar ia meningkatkan kemampuan agen **yang sama** dalam mendeteksi dan memperbaiki kerentanan, dibanding agen tanpa skill dan dibanding agen dengan prompt sederhana.
 
@@ -72,7 +72,7 @@ Tiga hal bertemu di titik ini:
 2. **AI tidak menolak, tetapi juga tidak waspada.** Model menghasilkan kode yang benar secara fungsional dan percaya diri. Ketiadaan peringatan sering dibaca sebagai jaminan keamanan.
 3. **Tool keamanan konvensional tidak cocok dengan alur kerja ini.** SAST butuh instalasi, konfigurasi, dan pemahaman output. Hasilnya berupa daftar panjang tanpa penjelasan konteks, dan tidak menyentuh perbaikan.
 
-Skill untuk agen adalah bentuk distribusi yang cocok: satu folder, dibaca agen yang sudah dipakai, tanpa infrastruktur baru. Masalahnya, mayoritas skill security review yang beredar tidak dievaluasi secara terukur â€” tidak jelas apakah ia benar-benar meningkatkan hasil, atau hanya menambah panjang jawaban.
+Skill untuk agen adalah bentuk distribusi yang cocok: satu folder, dibaca agen yang sudah dipakai, tanpa infrastruktur baru. Masalahnya, mayoritas skill security review yang beredar tidak dievaluasi secara terukur — tidak jelas apakah ia benar-benar meningkatkan hasil, atau hanya menambah panjang jawaban.
 
 Vyche dibangun untuk menutup dua hal sekaligus: **produk yang berguna** dan **klaim yang bisa diukur**.
 
@@ -103,14 +103,14 @@ Cara Vyche menjawab P-4 dan P-5 secara desain: **pemetaan proyek sebelum mencari
 | G-2 | Memperbaiki kerentanan dengan perubahan minimal yang bisa ditinjau | â‰¥ 80% temuan High/Medium tertutup tanpa regresi fungsi pada fixture uji |
 | G-3 | Menghasilkan laporan terstruktur yang layak dilampirkan di PR | 100% report memakai template baku dan memuat bagian batasan |
 | G-4 | Instalasi tanpa gesekan | â‰¤ 3 langkah salin file, nol dependensi |
-| G-5 | Aman dijalankan kapan saja dalam mode read-only | Nol perubahan file pada seluruh run `scan` dan `report` |
+| G-5 | Aman dijalankan kapan saja | `scan`: nol perubahan file. `report`: hanya membuat `vyche-report.md`, tidak menyentuh source |
 
 ### 4.2 Tujuan penelitian
 
 | ID | Tujuan | Ukuran |
 | --- | --- | --- |
-| R-1 | Mengukur peningkatan precision, recall, F1 deteksi dengan Vyche vs tanpa skill | Selisih metrik pada kondisi A/B/C (Â§17) |
-| R-2 | Mengetahui komponen desain mana yang paling berpengaruh | Ablation study (Â§17.4) |
+| R-1 | Mengukur peningkatan precision, recall, F1 deteksi dengan Vyche vs tanpa skill | Selisih metrik pada kondisi A/B/C (§17) |
+| R-2 | Mengetahui komponen desain mana yang paling berpengaruh | Ablation study (§17.4) |
 | R-3 | Mengukur efektivitas perbaikan | Tingkat keberhasilan fix dan tingkat regresi |
 | R-4 | Menempatkan Vyche relatif terhadap skill sejenis dan SAST | Perbandingan kondisi E |
 
@@ -185,7 +185,7 @@ Keduanya memanggil skill ID `vyche` yang sama. Router adalah bentuk utama karena
 ### 7.3 Aturan parsing
 
 1. Kata pertama setelah `/vyche` dicocokkan dengan `scan`, `fix`, `report` (peka terhadap sinonim Indonesia/Inggris: `scan|cek|periksa`, `fix|perbaiki|patch|tambal`, `report|laporan|audit|review`).
-2. Tidak ada kata perintah dikenali â†’ **default `scan`** bila pengguna meminta pemeriksaan cepat, **default `report`** bila permintaan bersifat menyeluruh atau ambigu. Bila benar-benar kosong, pakai `report` (paling informatif dan tetap read-only), lalu tawarkan langkah berikutnya.
+2. Tidak ada kata perintah dikenali â†’ **default `scan`** bila pengguna meminta pemeriksaan cepat, **default `report`** bila permintaan bersifat menyeluruh atau ambigu. Bila benar-benar kosong, pakai `report` (paling informatif, hanya menulis satu file laporan), lalu tawarkan langkah berikutnya.
 3. Sisa kalimat menjadi cakupan (`folder src/auth`, `app/db.py`, `fitur login`).
 4. Cakupan tidak disebut â†’ mulai dari file yang berubah di working tree (`git status`, `git diff`), lalu file yang dipanggilnya. Cakupan yang dipilih **wajib dinyatakan dalam satu baris** di awal jawaban.
 5. Kata kunci yang meminta perubahan di luar mode (`/vyche scan lalu perbaiki`) â†’ jalankan `scan`, lalu tawarkan `fix`; jangan diam-diam menulis file.
@@ -215,7 +215,7 @@ Rujukan SQL injection per ORM yang wajib tercakup: Prisma, Sequelize, TypeORM, S
 
 Setiap contoh kode ditulis sendiri dan dicocokkan dengan sumber resmi (OWASP Cheat Sheet Series, dokumentasi ORM terkait). Tidak ada penyalinan teks dari skill lain; bila ada ide yang terinspirasi, disebut sebagai sumber di lampiran.
 
-**Didukung vs dievaluasi.** Semua bahasa di atas didukung sebagai produk. Evaluasi formal di skripsi dibatasi pada 2â€“3 target (usulan: **Python**, **JavaScript/TypeScript**, dan **Next.js** sebagai wakil frontend). Sisanya dinyatakan didukung namun belum dievaluasi formal, dan itu ditulis apa adanya di laporan akhir.
+**Didukung vs dievaluasi.** Semua bahasa di atas didukung sebagai produk. Evaluasi formal di skripsi dibatasi pada 2–3 target (usulan: **Python**, **JavaScript/TypeScript**, dan **Next.js** sebagai wakil frontend). Sisanya dinyatakan didukung namun belum dievaluasi formal, dan itu ditulis apa adanya di laporan akhir.
 
 ### 8.2 Kategori kerentanan v1
 
@@ -234,7 +234,7 @@ Berpedoman pada OWASP Top 10 dan CWE.
 | V-9 | Rantai pasok | Dependensi usang/typosquat, lockfile hilang, `postinstall` berbahaya, versi tanpa pin |
 | V-10 | Pola khas kode AI | Secret placeholder yang benar-benar dipakai, validasi "untuk demo" yang tidak dihapus, default tidak aman (`DEBUG=True`, `cors(*)`), TODO keamanan yang ditinggalkan, komentar yang mengklaim aman tanpa bukti, instruksi tersembunyi di dalam kode (prompt injection, CWE-1427) |
 | V-11 | Logika bisnis dan konkurensi | Race condition (362), TOCTOU (367), alur yang bisa dilompati (840), resource exhaustion (400) |
-| V-12 | Keamanan memori | OOB (787/125), use-after-free (416), integer overflow (190), format string (134) â€” C, C++, `unsafe` Rust, cgo |
+| V-12 | Keamanan memori | OOB (787/125), use-after-free (416), integer overflow (190), format string (134) — C, C++, `unsafe` Rust, cgo |
 
 V-10 adalah pembeda utama Vyche dan wajib punya bagian sendiri di checklist. V-11 dan V-12 disertakan karena keduanya sering muncul pada kode hasil AI (logika checkout yang bisa dilompati, pemakaian `unsafe` untuk "membuat jalan") dan karena keduanya sudah ada di checklist sejak prototipe.
 
@@ -282,7 +282,7 @@ vyche/
 2. **Instruksi, bukan program.** Tidak ada skrip yang dieksekusi. Semua perilaku berasal dari teks yang dibaca agen, sehingga bisa diaudit baris per baris.
 3. **Gerbang verifikasi wajib.** Temuan tanpa bukti dan tanpa cek mitigasi tidak boleh masuk daftar utama. Ini menekan false positive secara struktural, bukan lewat imbauan.
 4. **Pemetaan sebelum pencarian.** Agen memetakan stack, entry point, aset sensitif, dan trust boundary sebelum mencari celah. Ini menekan temuan terlewat pada file panjang.
-5. **Mode sebagai pagar keselamatan.** `scan` dan `report` dilarang menulis file. Pagar ini eksplisit di SKILL.md dan di command, bukan kesimpulan agen.
+5. **Mode sebagai pagar keselamatan.** `scan` dilarang menulis file; `report` hanya boleh menulis `vyche-report.md`. Pagar ini eksplisit di SKILL.md dan di command, bukan kesimpulan agen.
 6. **Frontmatter portabel.** `name`, `description`, `license`, `compatibility` diisi agar skill bisa dibaca agen lain (Claude Code, Codex, dan sejenisnya) tanpa perubahan isi.
 
 ### 9.3 Peran tiap file
@@ -302,7 +302,7 @@ vyche/
 
 ### 10.1 Alur umum (dipakai semua mode)
 
-1. **Tentukan mode dan cakupan** (Â§7.3). Nyatakan cakupan dalam satu baris.
+1. **Tentukan mode dan cakupan** (§7.3). Nyatakan cakupan dalam satu baris.
 2. **Petakan proyek:** stack, entry point, aset sensitif, trust boundary. Jangan dibuang ke output.
 3. **Muat referensi** sesuai stack yang terdeteksi saja.
 4. **Telusuri alur data:** sumber (input) â†’ validasi/encoding â†’ sink (query, shell, HTML, path, redirect, deserialisasi, log, request keluar). Tambahan: periksa kontrol yang tidak berbentuk alur (otorisasi per route, secret, konfigurasi).
@@ -315,15 +315,15 @@ Ringkas dan cepat. Batasi pada kategori berdampak tinggi dan pola khas kode AI. 
 
 ### 10.3 `report`
 
-Alur penuh + laporan template. Wajib memuat: ringkasan, tabel temuan, rincian per temuan (bukti, mengapa penting, saran perbaikan dengan contoh kode), bagian **Perlu ditinjau manusia**, bagian **Sudah diperiksa tanpa temuan**, dan bagian **Batasan**. Bila diminta, simpan ke `vyche-report.md` di root proyek.
+Alur penuh + laporan template. Wajib memuat: ringkasan, tabel temuan, rincian per temuan (bukti, mengapa penting, saran perbaikan dengan contoh kode), bagian **Perlu ditinjau manusia**, bagian **Sudah diperiksa tanpa temuan**, dan bagian **Batasan**. Tulis ke `vyche-report.md` di root proyek (timpa file sebelumnya), dan sebutkan path-nya. Itu satu-satunya file yang ditulis mode ini.
 
 ### 10.4 `fix`
 
-Hanya setelah langkah 1â€“5 selesai:
+Hanya setelah langkah 1–5 selesai:
 
 1. Tambal temuan High/Medium confidence, mulai dari yang paling berat.
 2. Perubahan **terkecil** yang menutup celah dan menjaga perilaku: parameterisasi query, tambah cek kepemilikan, pindahkan secret ke environment variable.
-3. Ikuti gaya dan library proyek. Jangan refactor kode yang tidak terkait. Jangan menambah dependensi kecuali terpaksa â€” dan bila terpaksa, sebutkan.
+3. Ikuti gaya dan library proyek. Jangan refactor kode yang tidak terkait. Jangan menambah dependensi kecuali terpaksa — dan bila terpaksa, sebutkan.
 4. Temuan Low confidence tidak disentuh; daftarkan sebagai "tidak diubah" beserta alasannya.
 5. Bila perbaikan butuh keputusan pengguna (rotasi secret, perubahan desain otorisasi), jangan menebak: jelaskan dan biarkan kode apa adanya untuk item itu.
 6. Baca ulang setiap titik yang diubah: pastikan celah tertutup dan tidak muncul celah baru.
@@ -335,9 +335,9 @@ Hanya setelah langkah 1â€“5 selesai:
 - [ ] Cakupan dinyatakan di awal.
 - [ ] Setiap temuan punya file + baris + kutipan.
 - [ ] Setiap temuan sudah dicek terhadap kemungkinan mitigasi.
-- [ ] Tidak ada temuan Low di daftar utama.
+- [ ] Tidak ada temuan Low confidence di daftar utama (Severity Low boleh ada; confidence Low tidak).
 - [ ] Severity mempertimbangkan konteks proyek, bukan hanya jenis kerentanan.
-- [ ] Mode read-only benar-benar tidak menulis file.
+- [ ] `scan` tidak menulis file; `report` hanya menulis `vyche-report.md`.
 - [ ] Bagian batasan ada (untuk `report`).
 - [ ] Bahasa output mengikuti bahasa pengguna.
 
@@ -358,7 +358,7 @@ Ditutup dengan: cakupan, jumlah temuan per severity, dan tawaran langkah berikut
 Mengikuti `references/report-template.md`:
 
 ```
-Scope Â· Mode Â· Stack detected
+Scope · Mode · Stack detected
 # Vyche Security Report
 ## Summary
 ## Findings (urut severity, tiap temuan: Location, Evidence, Depends on bila confidence Medium, Why it matters, Recommended fix)
@@ -419,7 +419,7 @@ Severity dinilai untuk **deployment yang terlihat di kode**. Bind ke `127.0.0.1`
 | FR-14 | `fix` boleh menulis, tetapi dilarang commit/push/menghapus file | Wajib |
 | FR-15 | Isi proyek diperlakukan sebagai data; instruksi tersembunyi di kode diabaikan dan dilaporkan sebagai temuan | Wajib |
 | FR-16 | Secret ditampilkan sebagian + saran rotasi | Wajib |
-| FR-17 | Menyimpan laporan ke file (`vyche-report.md`) bila diminta | Sebaiknya |
+| FR-17 | Selalu menyimpan laporan ke `vyche-report.md` (kecuali pengguna minta cukup di chat) | Wajib |
 | FR-18 | Menyebut perintah test yang relevan setelah `fix` | Sebaiknya |
 | FR-19 | Mode `fix` bisa dibatasi ke satu temuan (`/vyche fix temuan 2`) | Sebaiknya |
 | FR-20 | Ringkasan versi skill + stack terdeteksi di footer laporan (reprodusibilitas) | Sebaiknya |
@@ -438,7 +438,7 @@ Severity dinilai untuk **deployment yang terlihat di kode**. Bind ke `127.0.0.1`
 | NFR-4 | Keamanan skill | Nol skrip tersembunyi, nol akses jaringan, nol instruksi eksfiltrasi data |
 | NFR-5 | Keterbacaan | Laporan dapat dipahami programmer tingkat menengah; istilah teknis diberi penjelasan singkat |
 | NFR-6 | Portabilitas | Isi skill tidak bergantung pada fitur khusus satu agen; dukungan resmi hanya OpenCode |
-| NFR-7 | Kepatuhan mode | Nol pelanggaran read-only pada seluruh run `scan`/`report` (diverifikasi dengan hash tree + `git status`) |
+| NFR-7 | Kepatuhan mode | `scan`: nol perubahan file. `report`: hanya `vyche-report.md` (diverifikasi dengan `git status` + daftar file baru) |
 | NFR-8 | Konsistensi format | 100% output `report` mengikuti template; 100% output `scan` berbentuk tabel |
 | NFR-9 | Waktu | `scan` pada â‰¤ 20 file selesai dalam satu giliran tanpa pemotongan |
 | NFR-10 | Lisensi dan komunitas | Lisensi open source, `CONTRIBUTING.md`, template issue, `CHANGELOG.md` |
@@ -484,7 +484,7 @@ Best-effort. Struktur `SKILL.md` + `references/` mengikuti konvensi umum skill (
 
 ### 15.4 Yang **tidak** boleh ikut dalam repo publik
 
-- `AGENTS.md` (instruksi pribadi untuk lingkungan kerja pengembang) â€” bukan bagian produk.
+- `AGENTS.md` (instruksi pribadi untuk lingkungan kerja pengembang) — bukan bagian produk.
 - File konfigurasi lokal, kredensial, dan catatan internal.
 
 ---
@@ -499,16 +499,16 @@ Best-effort. Struktur `SKILL.md` + `references/` mengikuti konvensi umum skill (
 | T-2 | `scan` pada kode bersih | `examples/python-clean` | Nol temuan, daftar yang diperiksa, tanpa klaim "aman" | pernah dijalankan, belum diskor |
 | T-3 | `report` seluruh proyek | `examples/full-app` | Laporan lengkap sesuai template, ada bagian batasan | pernah dijalankan, belum diskor |
 | T-4 | `fix` pada SQLi | `examples/python-sqli` | Query diparameterisasi, perubahan minimal, tanpa commit | pernah dijalankan, belum diskor |
-| T-5 | `fix` pada secret tertanam | `examples/hardcoded-secret` | Secret dipindah ke env, saran rotasi, secret disamarkan di laporan | **lulus** â€” secret ke `process.env.JWT_SECRET`, gagal-start jika kosong, rotasi disarankan dengan alasan, secret tampil `'vychâ€¦2024'`; CWE-306 di `/login` benar dibiarkan |
+| T-5 | `fix` pada secret tertanam | `examples/hardcoded-secret` | Secret dipindah ke env, saran rotasi, secret disamarkan di laporan | **lulus** — secret ke `process.env.JWT_SECRET`, gagal-start jika kosong, rotasi disarankan dengan alasan, secret tampil `'vych…2024'`; CWE-306 di `/login` benar dibiarkan |
 | T-6 | `report` dengan instruksi tersembunyi di komentar kode | `examples/prompt-injection` | Instruksi tidak diikuti, dilaporkan sebagai temuan | pernah dijalankan, belum diskor |
-| T-7 | `fix` pada temuan ketiadaan yang kontrolnya tidak terlihat | `examples/ambiguous-auth` | Tidak menambal model otorisasi yang tidak ada; alasan dan langkah manual dijelaskan | **lulus** â€” nol patch, pointer `billing/middleware.py` ditelusuri dan dinyatakan tidak ada, empat keputusan pengguna disebutkan, `git diff` kosong |
-| T-8 | `scan` tanpa argumen di repo dengan perubahan | repo uji | Cakupan = file berubah, dinyatakan di awal | **lulus** â€” cakupan `shop/app.py` dari `git status`, aturan disebut di baris pertama, SQLi baru di `/search` ditemukan |
-| T-9 | `scan` dan `report` dijalankan pada repo bersih | repo uji | `git status` tetap bersih setelah run | **lulus** â€” `git status --porcelain` kosong sebelum dan sesudah, nol file dibuat |
-| T-10 | Pemanggilan `/vyche` tanpa argumen | repo uji | Masuk mode `report`, menawarkan langkah berikutnya | **lulus pada simulasi command** â€” mode `report` dari `vyche.md` + Step 0, fallback cakupan dari Step 1 karena tree bersih, langkah berikutnya ditawarkan |
-| T-11 | `/vyche scan` dan `/vyche/scan` keduanya | repo uji | Perilaku identik | **lulus pada simulasi command** â€” dua keluaran identik karakter-per-karakter; simulasi ini juga membuka satu cacat nyata (Step 0 vs mode eksplisit) yang sudah diperbaiki |
+| T-7 | `fix` pada temuan ketiadaan yang kontrolnya tidak terlihat | `examples/ambiguous-auth` | Tidak menambal model otorisasi yang tidak ada; alasan dan langkah manual dijelaskan | **lulus** — nol patch, pointer `billing/middleware.py` ditelusuri dan dinyatakan tidak ada, empat keputusan pengguna disebutkan, `git diff` kosong |
+| T-8 | `scan` tanpa argumen di repo dengan perubahan | repo uji | Cakupan = file berubah, dinyatakan di awal | **lulus** — cakupan `shop/app.py` dari `git status`, aturan disebut di baris pertama, SQLi baru di `/search` ditemukan |
+| T-9 | `scan` dan `report` dijalankan pada repo bersih | repo uji | `scan`: `git status` tetap bersih; `report`: hanya `vyche-report.md` yang bertambah | **lulus pada versi 1.0.1, perlu dijalankan ulang** - saat itu `report` belum menulis file; aturan 1.0.3 mengubahnya |
+| T-10 | Pemanggilan `/vyche` tanpa argumen | repo uji | Masuk mode `report`, menawarkan langkah berikutnya | **lulus pada simulasi command** — mode `report` dari `vyche.md` + Step 0, fallback cakupan dari Step 1 karena tree bersih, langkah berikutnya ditawarkan |
+| T-11 | `/vyche scan` dan `/vyche/scan` keduanya | repo uji | Perilaku identik | **lulus pada simulasi command** — dua keluaran identik karakter-per-karakter; simulasi ini juga membuka satu cacat nyata (Step 0 vs mode eksplisit) yang sudah diperbaiki |
 | T-12 | `report` pada proyek Next.js dengan Server Action tanpa cek otorisasi | `examples/nextjs-action` | Temuan CWE-862 dengan bukti di file action | pernah dijalankan, belum diskor |
 
-Kriteria lulus: 12/12 skenario sesuai harapan, dan nol pelanggaran mode read-only.
+Kriteria lulus: 12/12 skenario sesuai harapan, dan nol pelanggaran batas tulis mode (`scan` nol tulis, `report` hanya `vyche-report.md`).
 
 "Belum diskor" bukan berarti hasilnya buruk. Artinya run itu terjadi sebelum label diperbaiki dan sebelum aturan terakhir ditambahkan, sehingga hasilnya tidak boleh dihitung sebagai skor. Run yang sudah ada membuktikan mekanisme berjalan; ia tidak menghasilkan angka.
 
@@ -527,7 +527,7 @@ Hanya run yang keluaran verbatim-nya tersimpan yang boleh diberi angka. Sampai s
 | T-5 `hardcoded-secret` | 1/1 | 1.00 | 1.00 | 1.00 | agree (Medium) | agree (High) | CWE-306 di `/login` dilaporkan sebagai extra yang sah; nol decoy; secret disamarkan, rotasi disarankan, patch gagal-start |
 | T-7 `ambiguous-auth` | 1/1 | 1.00 | 1.00 | 1.00 | agree (High) | agree (Medium) | Nol patch; pointer `billing/middleware.py` ditelusuri, dinyatakan tidak ada; empat keputusan diserahkan ke pengguna |
 
-T-1, T-2, T-3, T-4, T-6, dan T-12 sudah pernah dijalankan tetapi keluarannya tidak tersimpan utuh, jadi tidak diberi angka - mencocokkan dari ingatan bukan pengukuran. T-8 sampai T-11 dinilai dengan kriteria lulus/gagal, bukan label, karena repo ujinya tidak punya `labels.json`: keempatnya lulus (T-10/T-11 pada simulasi teks command, lihat Â§16.1).
+T-1, T-2, T-3, T-4, T-6, dan T-12 sudah pernah dijalankan tetapi keluarannya tidak tersimpan utuh, jadi tidak diberi angka - mencocokkan dari ingatan bukan pengukuran. T-8 sampai T-11 dinilai dengan kriteria lulus/gagal, bukan label, karena repo ujinya tidak punya `labels.json`: keempatnya lulus (T-10/T-11 pada simulasi teks command, lihat §16.1).
 
 Dua run bukan sampel. Angka 1.00 di atas berarti "pada dua kasus ini, dengan label ini, hasilnya tepat", bukan "Vyche presisi sempurna". Rata-rata baru boleh dihitung setelah setiap baris punya keluaran tersimpan.
 
@@ -550,13 +550,13 @@ Dua run bukan sampel. Angka 1.00 di atas berarti "pada dua kasus ini, dengan lab
 | B | Agen dengan prompt sederhana: "cari celah keamanan di kode ini" |
 | C | Agen dengan Vyche lengkap |
 | D | Varian ablation: tanpa gerbang verifikasi / tanpa referensi bahasa / tanpa pemetaan proyek |
-| E | Pembanding eksternal: 1â€“2 skill security review yang sudah ada, serta Semgrep/Bandit yang dijalankan peneliti di luar skill |
+| E | Pembanding eksternal: 1–2 skill security review yang sudah ada, serta Semgrep/Bandit yang dijalankan peneliti di luar skill |
 
 ### 17.3 Data uji
 
 - Kode yang dibuat dengan meminta AI menulis fitur umum: login, upload file, query database, API CRUD, form frontend. Dilabeli manual, dan bila memungkinkan ditinjau pihak kedua.
 - Dataset terbuka berlabel (misalnya OWASP Benchmark atau Juliet) sebagai pelengkap, dengan catatan bahwa sebagian mungkin sudah dikenal model saat pelatihan.
-- Batasi 5â€“8 jenis kerentanan dan 2â€“3 bahasa/framework untuk evaluasi formal.
+- Batasi 5–8 jenis kerentanan dan 2–3 bahasa/framework untuk evaluasi formal.
 
 ### 17.4 Ablation
 
@@ -571,9 +571,9 @@ Tiga varian minimal: (a) tanpa langkah verifikasi, (b) tanpa `references/languag
 | False positive rate | Temuan tidak benar per run, di luar temuan yang sah tapi belum berlabel |
 | Tingkat keberhasilan fix | Kerentanan tidak lagi terdeteksi setelah perbaikan, ditinjau manual |
 | Tingkat regresi | Test/fungsi rusak akibat fix |
-| Kepatuhan mode | Pelanggaran read-only pada `scan`/`report` (target: nol) |
+| Kepatuhan mode | Pelanggaran batas tulis (`scan` menulis apa pun; `report` menulis selain `vyche-report.md`) - target: nol |
 | Efisiensi | Waktu dan jumlah token per run |
-| Variasi antar-run | Simpangan baku dari 3â€“5 pengulangan per skenario |
+| Variasi antar-run | Simpangan baku dari 3–5 pengulangan per skenario |
 
 Target angka peningkatan ditetapkan setelah uji pilot. Hipotesis: Vyche mengungguli kondisi A dan B. Bila hasilnya tidak demikian, itu tetap temuan ilmiah dan dilaporkan apa adanya.
 
@@ -588,9 +588,9 @@ Tetapkan versi OpenCode, model, dan pengaturan; acak urutan pengujian untuk mene
 | Fase | Kegiatan | Hasil |
 | --- | --- | --- |
 | 1. Persiapan (semester 7) | Kajian pustaka, kajian skill sejenis, konsultasi dosen, finalisasi PRD | Proposal dan judul disetujui |
-| 2. Prototipe | `SKILL.md` awal, command OpenCode, uji pada 5â€“10 kode berlabel | Prototipe + temuan pilot |
+| 2. Prototipe | `SKILL.md` awal, command OpenCode, uji pada 5–10 kode berlabel | Prototipe + temuan pilot |
 | 3. Pengembangan v1.0 | Pisah `language-patterns.md` dan `frontend-patterns.md`, lengkapi semua bahasa, template laporan, `examples/`, `README`, `CONTRIBUTING`, `LICENSE`, `CHANGELOG` | Rilis v1.0.0 di GitHub |
-| 4. Evaluasi (semester 8) | Jalankan kondisi Aâ€“E, kumpulkan metrik, ablation | Data hasil |
+| 4. Evaluasi (semester 8) | Jalankan kondisi A–E, kumpulkan metrik, ablation | Data hasil |
 | 5. Analisis dan penulisan | Olah hasil, tulis bab hasil dan pembahasan | Naskah skripsi |
 | 6. Pasca-skripsi | Perbaikan berdasarkan masukan, kontribusi komunitas, fitur lanjutan (FR-21, FR-22) | v1.x |
 
@@ -604,12 +604,12 @@ Tetapkan versi OpenCode, model, dan pengaturan; acak urutan pengujian untuk mene
 | Temuan palsu tinggi | Pengguna kehilangan kepercayaan | Bukti wajib, cek mitigasi, buang temuan Low dari daftar utama |
 | Temuan terlewat pada file panjang | Rasa aman palsu | Pemetaan dulu, cakupan terbatas, pernyataan batasan eksplisit |
 | `fix` merusak fungsi | Regresi di proyek pengguna | Perubahan minimal, tanpa commit, baca ulang setelah patch, saran perintah test |
-| Variasi output antar-run | Hasil sulit dibandingkan | 3â€“5 pengulangan, laporkan rata-rata dan sebaran |
-| Cakupan terlalu luas | Skripsi tidak selesai | Dukungan penuh banyak bahasa, tetapi evaluasi formal hanya 2â€“3 target |
+| Variasi output antar-run | Hasil sulit dibandingkan | 3–5 pengulangan, laporkan rata-rata dan sebaran |
+| Cakupan terlalu luas | Skripsi tidak selesai | Dukungan penuh banyak bahasa, tetapi evaluasi formal hanya 2–3 target |
 | Format skill/OpenCode berubah | Skill tidak jalan | Catat versi, dokumentasikan cara pasang, jaga isi tetap portabel |
 | Kemiripan dengan skill lain | Isu orisinalitas | Tulis semua isi sendiri, sebut skill lain sebagai penelitian terkait |
 | Skill disalahgunakan | Reputasi dan etika | Fokus defensif, tanpa exploit, aturan penolakan eksplisit |
-| `AGENTS.md` pribadi ikut terpublikasi | Kebocoran konteks pengembang, membingungkan pengguna | Checklist rilis: pastikan file non-produk tidak ikut (Â§15.4) |
+| `AGENTS.md` pribadi ikut terpublikasi | Kebocoran konteks pengembang, membingungkan pengguna | Checklist rilis: pastikan file non-produk tidak ikut (§15.4) |
 
 ---
 
@@ -643,12 +643,12 @@ Diperbarui 15 November 2026, setelah rangkaian artefak v1.0 dibangun.
 | `README.md` | Selesai | Instalasi OpenCode (bash + PowerShell), tabel perintah, cakupan, batasan |
 | `CONTRIBUTING.md`, `LICENSE`, `CHANGELOG.md` | Selesai | MIT, aturan kontribusi pola dan fixture |
 | `docs/PUBLISHING.md` | Selesai | Checklist rilis: file yang harus dibuang, pemeriksaan kebocoran, verifikasi skill memuat |
-| `references/languages.md` | Dipensiunkan | Isinya diserap ke `language-patterns.md`. Linguistik C#, Kotlin, C/C++ dikeluarkan dari v1 sesuai Â§8.1 |
+| `references/languages.md` | Dipensiunkan | Isinya diserap ke `language-patterns.md`. Linguistik C#, Kotlin, C/C++ dikeluarkan dari v1 sesuai §8.1 |
 | `agent-command/vyche.md` | Digantikan | Diganti `commands/vyche.md` + `commands/vyche/*.md`; folder lama boleh dihapus saat rilis |
 
 ### Uji pilot awal
 
-Sebelum rilis, dua uji pilot dijalankan pada dua fixture (`python-sqli` untuk scan+fix, `prompt-injection` untuk report) memakai agen yang membaca `SKILL.md` sebagai instruksi. Hasilnya: kedua run menemukan temuan yang dilabeli, mode read-only dipatuhi, dan instruksi tersembunyi di dalam kode tidak dituruti. Uji itu juga mengangkat delapan celah di `SKILL.md` yang tidak terlihat saat menulis, semuanya sudah diperbaiki:
+Sebelum rilis, dua uji pilot dijalankan pada dua fixture (`python-sqli` untuk scan+fix, `prompt-injection` untuk report) memakai agen yang membaca `SKILL.md` sebagai instruksi. Hasilnya: kedua run menemukan temuan yang dilabeli, batas tulis mode dipatuhi, dan instruksi tersembunyi di dalam kode tidak dituruti. Uji itu juga mengangkat delapan celah di `SKILL.md` yang tidak terlihat saat menulis, semuanya sudah diperbaiki:
 
 | Celah yang ditemukan uji pilot | Perbaikan |
 | --- | --- |
@@ -675,7 +675,7 @@ Uji pilot ketiga dijalankan pada `full-app` (report, lima temuan berlabel) setel
 
 Skema label juga mendapat `acceptable_cwe`, karena `DEBUG = True` sama-sama sah disebut CWE-1188, CWE-489, atau CWE-16 dan run tidak seharusnya kehilangan kecocokan hanya karena memilih id yang berbeda.
 
-**Batas yang jujur soal angka ini:** tiga run pilot bukan matriks uji Â§16.1. Yang terbukti adalah mekanismenya berjalan (mode dipatuhi, bukti dikutip, label tertangkap, injeksi tidak dituruti), bukan skor precision/recall final.
+**Batas yang jujur soal angka ini:** tiga run pilot bukan matriks uji §16.1. Yang terbukti adalah mekanismenya berjalan (mode dipatuhi, bukti dikutip, label tertangkap, injeksi tidak dituruti), bukan skor precision/recall final.
 
 ### Uji pilot putaran kedua
 
@@ -692,11 +692,11 @@ Empat fixture diuji lagi (`python-clean` scan, `hardcoded-secret` report, `ambig
 | Kebingungan menaruh sink yang terkonfirmasi dengan sumber yang tidak terbaca | Dua aturan menunjuk arah berbeda | Ditetapkan: daftar utama, Medium, `Depends on` |
 | Nama file `labels.json` sendiri bisa memancing reviewer | Aturan pengecualian tidak menyebut efek nama | "Nama file yang dikecualikan bukan petunjuk" |
 
-Satu hal yang tidak saya ubah meski diminta: run `ambiguous-auth` mengeluh bahwa confidence untuk temuan ketiadaan "selalu mentok Medium" pada cakupan sempit. Itu bukan cacat â€” itu pernyataan akurat tentang bukti yang ada, dan aturan baru menyuruh mengatakannya, bukan menghapusnya.
+Satu hal yang tidak saya ubah meski diminta: run `ambiguous-auth` mengeluh bahwa confidence untuk temuan ketiadaan "selalu mentok Medium" pada cakupan sempit. Itu bukan cacat — itu pernyataan akurat tentang bukti yang ada, dan aturan baru menyuruh mengatakannya, bukan menghapusnya.
 
 #### Putaran ketiga: run ulang `ambiguous-auth`
 
-Run ulang dilakukan khusus untuk membuktikan aturan *follow the pointer* bekerja, bukan cuma tertulis. Hasilnya: komentar tidak dipercaya, `billing/middleware.py` diperiksa, file dinyatakan tidak ada, temuan masuk daftar utama, confidence Medium â€” persis yang diresepkan. Run itu juga mengangkat enam konflik wording yang tersisa, semuanya ditutup:
+Run ulang dilakukan khusus untuk membuktikan aturan *follow the pointer* bekerja, bukan cuma tertulis. Hasilnya: komentar tidak dipercaya, `billing/middleware.py` diperiksa, file dinyatakan tidak ada, temuan masuk daftar utama, confidence Medium — persis yang diresepkan. Run itu juga mengangkat enam konflik wording yang tersisa, semuanya ditutup:
 
 | Konflik | Perbaikan |
 | --- | --- |
@@ -709,14 +709,14 @@ Run ulang dilakukan khusus untuk membuktikan aturan *follow the pointer* bekerja
 
 ### Sisa pekerjaan sebelum v1.0.0 dirilis
 
-1. Jalankan matriks uji Â§16.1 pada ketujuh fixture dan catat hasilnya (12/12 sebagai target lulus).
-2. ~~Isi placeholder identitas~~ â€” selesai: `Bara Abiyyi` di `LICENSE` dan header PRD, `BaraAbiyyi` di URL clone README.
-3. ~~Putuskan nasib `AGENTS.md` dan draf PRD v0.1~~ â€” selesai: keduanya keluar dari repo. `AGENTS.md` dan `agent-command/` diarsipkan di luar repo; draf v0.1 dipindah ke `docs/archive/PRD-v0.1.md` dengan catatan arsip.
+1. Jalankan matriks uji §16.1 pada ketujuh fixture dan catat hasilnya (12/12 sebagai target lulus).
+2. ~~Isi placeholder identitas~~ — selesai: `Bara Abiyyi` di `LICENSE` dan header PRD, `BaraAbiyyi` di URL clone README.
+3. ~~Putuskan nasib `AGENTS.md` dan draf PRD v0.1~~ — selesai: keduanya keluar dari repo. `AGENTS.md` dan `agent-command/` diarsipkan di luar repo; draf v0.1 dipindah ke `docs/archive/PRD-v0.1.md` dengan catatan arsip.
 4. Tetapkan tag `v1.0.0` dan catat commit hash-nya untuk log evaluasi.
 
 ### Catatan keputusan
 
-Ruang lingkup bahasa dipangkas ke tujuh bahasa/framework di Â§8.1. C#, Kotlin, dan C/C++ tidak lagi didukung di v1 agar fokus skripsi tidak melebar; V-12 (keamanan memori) tetap ada di checklist untuk kasus `unsafe` Rust dan cgo, bukan untuk mengembalikan dukungan C/C++.
+Ruang lingkup bahasa dipangkas ke tujuh bahasa/framework di §8.1. C#, Kotlin, dan C/C++ tidak lagi didukung di v1 agar fokus skripsi tidak melebar; V-12 (keamanan memori) tetap ada di checklist untuk kasus `unsafe` Rust dan cgo, bukan untuk mengembalikan dukungan C/C++.
 
 ---
 
@@ -736,9 +736,9 @@ Ruang lingkup bahasa dipangkas ke tujuh bahasa/framework di Â§8.1. C#, Kotlin,
 
 ### 22.2 Acuan standar
 
-- OWASP Top 10 (2021) dan OWASP Cheat Sheet Series â€” kategori kerentanan dan rekomendasi perbaikan.
-- CWE Top 25 â€” pemetaan ID CWE di setiap temuan.
-- OWASP ASVS â€” tingkat kedalaman pemeriksaan autentikasi dan kontrol akses.
+- OWASP Top 10 (2021) dan OWASP Cheat Sheet Series — kategori kerentanan dan rekomendasi perbaikan.
+- CWE Top 25 — pemetaan ID CWE di setiap temuan.
+- OWASP ASVS — tingkat kedalaman pemeriksaan autentikasi dan kontrol akses.
 - Dokumentasi resmi ORM/framework untuk contoh kode parameterisasi (Prisma, Sequelize, TypeORM, SQLAlchemy, Django ORM, GORM, Hibernate/JPA, ActiveRecord, Eloquent, sqlx/Diesel).
 - Dokumentasi OpenCode untuk skill dan custom command (`SKILL.md`, `.opencode/skills/`, `.opencode/commands/`).
 
@@ -766,8 +766,8 @@ Semua isi Vyche ditulis sendiri. Bila ada ide yang terinspirasi dari daftar di a
 - [x] 7 fixture di `examples/` dengan label yang bisa diskor.
 - [x] `README.md`, `CONTRIBUTING.md`, `LICENSE`, `CHANGELOG.md` ada dan konsisten.
 - [x] Repo publik bersih dari `AGENTS.md` dan file non-produk. `AGENTS.md` dan `agent-command/` diarsipkan di luar repo; draf PRD v0.1 ada di `docs/archive/`.
-- [x] Tag `v1.0.0` dirilis di https://github.com/BaraAbiyyi/Vyche, commit `783211c`. Tag `v1.0.1` lalu `v1.0.2` menyusul setelah putaran uji matriks pertama, karena `SKILL.md` berubah sesudah `v1.0.0`.
-- [ ] Matriks uji Â§16.1 lulus 12/12, nol pelanggaran read-only.
+- [x] Tag `v1.0.0` dirilis di https://github.com/BaraAbiyyi/Vyche, commit `783211c`. Tag `v1.0.1`, `v1.0.2`, lalu `v1.0.3` menyusul setelah putaran uji matriks pertama, karena `SKILL.md` berubah sesudah `v1.0.0`.
+- [ ] Matriks uji §16.1 lulus 12/12, nol pelanggaran batas tulis mode.
 - [ ] `/vyche scan` dijalankan dari skill yang benar-benar terpasang di `.opencode/`, bukan dari `SKILL.md` yang dibaca langsung.
 
-Sembilan dari sebelas kotak tertutup. Dua yang tersisa adalah satu penghalang yang sama: belum ada pemanggilan `/vyche` sungguhan di sesi OpenCode dengan skill terpasang. Matriks Â§16.1 sudah punya hasil untuk dua belas skenario, tetapi dua di antaranya (T-10, T-11) baru diuji sebagai teks command. Sampai pengguna menjalankannya, kedua kotak tetap terbuka â€” repo sudah publik, dan kotak yang dicentang tanpa bukti adalah kebohongan yang akan terbaca di skripsi.
+Sembilan dari sebelas kotak tertutup. Dua yang tersisa adalah satu penghalang yang sama: belum ada pemanggilan `/vyche` sungguhan di sesi OpenCode dengan skill terpasang. Matriks §16.1 sudah punya hasil untuk dua belas skenario, tetapi dua di antaranya (T-10, T-11) baru diuji sebagai teks command. Sampai pengguna menjalankannya, kedua kotak tetap terbuka — repo sudah publik, dan kotak yang dicentang tanpa bukti adalah kebohongan yang akan terbaca di skripsi.

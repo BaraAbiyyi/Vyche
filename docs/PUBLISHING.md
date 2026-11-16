@@ -1,4 +1,4 @@
-﻿# Publishing checklist
+# Publishing checklist
 
 Run this before making the repository public. The skill is harmless to ship; the working directory it was built in is not.
 
@@ -45,7 +45,7 @@ Already filled for the release (`Bara Abiyyi`, `BaraAbiyyi`). If you fork this a
 - `LICENSE`: the copyright holder.
 - `README.md`: the clone URL, in both the shell and PowerShell blocks.
 - `docs/PRD.md`: the `Pemilik` field in the document header.
-- `docs/PUBLISHING.md`: the remote URL in Â§6.
+- `docs/PUBLISHING.md`: the remote URL in §6.
 
 ## 5. Verify the skill actually loads
 
@@ -55,7 +55,7 @@ Already filled for the release (`Bara Abiyyi`, `BaraAbiyyi`). If you fork this a
 4. Run `/vyche scan examples/python-clean` and confirm zero findings, with a list of what was checked and no claim that the code is secure.
 5. Run `/vyche report examples/full-app` and confirm all six template sections are present.
 6. Run `/vyche fix examples/python-sqli`, then `git diff` and confirm the change is minimal and uncommitted.
-7. Confirm `git status` is clean after the two read-only runs.
+7. Run `/vyche report examples/full-app` and confirm it writes exactly `vyche-report.md` and nothing else. Then run `/vyche scan examples/full-app` and confirm `git status` is unchanged.
 
 A run that passes all seven is a release candidate.
 
@@ -64,12 +64,12 @@ A run that passes all seven is a release candidate.
 ```powershell
 git init
 git add .
-git commit -m "vyche 1.0.2"
+git commit -m "vyche 1.0.3"
 git branch -M main
 git remote add origin https://github.com/BaraAbiyyi/Vyche.git
 git push -u origin main
-git tag -a v1.0.2 -m "vyche 1.0.2"
-git push origin v1.0.2
+git tag -a v1.0.3 -m "vyche 1.0.3"
+git push origin v1.0.3
 ```
 
 Then on GitHub:
@@ -82,4 +82,4 @@ Then on GitHub:
 ## 7. After publishing
 
 - Record the release commit hash in the evaluation log, so every test run can be traced to an exact version of the skill.
-- Any change to `SKILL.md` or `references/` after a release requires a version bump before further evaluation runs, or the comparison is invalid. Current release: `v1.0.2`.
+- Any change to `SKILL.md` or `references/` after a release requires a version bump before further evaluation runs, or the comparison is invalid. Current release: `v1.0.3`.

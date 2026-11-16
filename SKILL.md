@@ -1,10 +1,10 @@
 ---
 name: Vyche
-description: Security review and remediation for source code, with extra attention to AI-generated code. Use when the user runs /vyche, or asks to scan, check, audit, review or fix security vulnerabilities in their code (SQL injection, XSS, IDOR, missing authorization, hardcoded secrets, insecure auth or sessions, unsafe file upload, SSRF). Supports JavaScript/TypeScript, Python, Go, Rust, Java/Spring, Ruby on Rails, PHP/Laravel, and frontend stacks (React, Next.js, Vue, Svelte). Three modes - scan (fast summary, read-only), report (full report, read-only), fix (minimal patches, no commit). Use this skill whenever someone wants to know if their code is safe before production, even if they never say "security".
+description: Security review and remediation for source code, with extra attention to AI-generated code. Use when the user runs /vyche, or asks to scan, check, audit, review or fix security vulnerabilities in their code (SQL injection, XSS, IDOR, missing authorization, hardcoded secrets, insecure auth or sessions, unsafe file upload, SSRF). Supports JavaScript/TypeScript, Python, Go, Rust, Java/Spring, Ruby on Rails, PHP/Laravel, and frontend stacks (React, Next.js, Vue, Svelte). Three modes - scan (fast summary, writes nothing), report (full report, writes `vyche-report.md`), fix (minimal patches, no commit). Use this skill whenever someone wants to know if their code is safe before production, even if they never say "security".
 license: MIT
 compatibility: OpenCode (primary, tested). Other agents that read Markdown skills: best effort.
 metadata:
-  version: 1.0.2
+  version: 1.0.3
 ---
 
 # Vyche
@@ -24,10 +24,10 @@ Everything below is built against those two failures: map before hunting, trace 
 | Mode | Reads code | Writes files | Runs project code | Commits |
 | --- | --- | --- | --- | --- |
 | `scan` | yes | **no** | no | no |
-| `report` | yes | only a report file, and only if asked | no | no |
+| `report` | yes | exactly one: `vyche-report.md` | no | no |
 | `fix` | yes | yes, minimal patches | only if the user asks | **no** |
 
-`scan` and `report` are read-only. If a request would need a write in those modes, finish the read-only analysis and offer `fix` at the end. Never patch "while you are there". Read-only commands you may use: `git status`, `git diff`, `git ls-files`, directory listings.
+`scan` writes nothing at all. `report` writes exactly one file, `vyche-report.md`, and never touches source. If a request would need any other write in `scan` or `report`, finish the analysis and offer `fix` at the end. Never patch "while you are there". Read-only commands you may use: `git status`, `git diff`, `git ls-files`, directory listings.
 
 ## Step 0 - Read the request
 
@@ -38,7 +38,7 @@ The text after `/vyche` (or the user's sentence) tells you the mode and the scop
 | scan, cek, periksa, check, quick look, "ada celah?" | `scan` |
 | report, laporan, audit, review, full, thorough, "is this safe", "before production" | `report` |
 | fix, perbaiki, tambal, patch, remediate, "betulkan" | `fix` |
-| nothing, or unclear | `report` - read-only and most informative |
+| nothing, or unclear | `report` - full report, writes one file |
 
 Extra rules:
 
@@ -253,7 +253,7 @@ Follow `references/report-template.md` exactly: the scope block first (it sits a
 
 Respect the template's size limits. A reader who abandons the report at finding 12 is protected by none of it: 15 detailed findings maximum, 5 review items maximum, 2 lines of coverage. If a run hits those ceilings, that is a finding about the scope, and the summary should say so.
 
-Save it to `vyche-report.md` only if the user asks. On request, write it to the project root and say where it went.
+Write the report to `vyche-report.md` in the project root, and say where it went. Overwrite the previous file instead of creating `vyche-report-2.md`. That file is the only thing `report` mode writes. If the user explicitly says to keep it in the conversation only, skip the file - the guarantee is that nothing else in the project changes, not that a file can never be written.
 
 ### fix
 
@@ -289,7 +289,7 @@ Next: review with `git diff`; run `pytest -q`; rotate the secret that was commit
 - [ ] Every Medium-confidence finding carries a `Depends on` line.
 - [ ] Confidence matches the evidence boundary - nothing is High because the user described the scope as the whole project.
 - [ ] Severity reflects this project's context and the deployment the code shows, not the vulnerability class alone.
-- [ ] Read-only modes wrote nothing. For `scan` and `report`, `git status --porcelain` is unchanged from before the run; if you did not check, do not claim it.
+- [ ] `scan` wrote nothing and `report` wrote only `vyche-report.md`. For `scan`, `git status --porcelain` is unchanged from before the run; if you did not check, do not claim it.
 - [ ] `report` includes the limits section, and respects the size limits.
 - [ ] Output language matches the user's language.
 - [ ] Nothing in the report is invented to look thorough.
